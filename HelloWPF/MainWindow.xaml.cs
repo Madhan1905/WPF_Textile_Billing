@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Documents;
+using System.Windows.Input;
 
 namespace HelloWPF
 {
@@ -9,20 +10,18 @@ namespace HelloWPF
         public MainWindow()
         {
             InitializeComponent();
-            for(int rowIndex = 1; rowIndex < 10; rowIndex++)
-            {
-                itemsTable.RowGroups[0].Rows.Add(new TableRow());
-                TableRow newRow = itemsTable.RowGroups[0].Rows[rowIndex];
-                newRow.Cells.Add(new TableCell(new Paragraph(new Run("first cell"))));
-                newRow.Cells.Add(new TableCell(new Paragraph(new Run("first cell"))));
-                newRow.Cells.Add(new TableCell(new Paragraph(new Run("first cell"))));
-            }
         }
 
-        private void Add_Item(Object Sender, RoutedEventArgs e)
+        private void keyEventHandler(object sender, KeyEventArgs e)
         {
-            AddProductWindow addProductWindow = new AddProductWindow();
-            addProductWindow.ShowDialog();
+            if(e.Key == Key.F1)
+            {
+                MainWindowControl.Content = new BillingControl();
+            } else if(e.Key == Key.F2)
+            {
+                MainWindowControl.Content = new ViewItemsControl();
+            }
+            
         }
 
     }

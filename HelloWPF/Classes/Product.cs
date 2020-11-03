@@ -11,7 +11,8 @@ namespace HelloWPF.Classes
         public String Barcode { get; set; }
         public String Name { get; set; }
         public String Description { get; set; }
-        public int MRP { get; set; }
+        public String Cost { get; set; }
+        public String MRP { get; set; }
 
     }
 }

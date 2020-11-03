@@ -1,14 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+using System.IO;
+using SQLite;
+using HelloWPF.Classes;
 
 namespace HelloWPF
 {
@@ -27,6 +21,31 @@ namespace HelloWPF
             this.Width = (sysWidth * 0.40);
             this.Left = sysWidth*0.5 - this.Width*0.5;
             this.Top = sysHeight*0.5 - this.Height *0.5;
+        }
+
+        private void submitButton(Object sender, RoutedEventArgs e)
+        {
+
+            Product product = new Product()
+            {
+                Barcode = barcode.Text,
+                Name = name.Text,
+                Description = description.Text,
+                Cost = cost.Text,
+                MRP = mrp.Text
+            };
+
+            string databaseName = "Products.db";
+            string folderPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            string databasePath = Path.Combine(folderPath, databaseName);
+
+            using (SQLiteConnection dbConnection = new SQLiteConnection(databasePath))
+            {
+                dbConnection.CreateTable<Product>();
+                dbConnection.Insert(product);
+            }
+
+            Close();
         }
     }
 }

@@ -5,59 +5,17 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:HelloWPF"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="1000" WindowState="Maximized">
+        Title="MainWindow" Height="450" Width="1000" WindowState="Maximized"
+        KeyDown="keyEventHandler">
+    <Window.Resources>
+        <local:ViewItemsControl x:Key="view"/>
+        <local:BillingControl x:Key="bill"/>
+    </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="0.1*"/>
-            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <Grid  Grid.Row="0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="0.05*"/>
-                <ColumnDefinition/>
-            </Grid.ColumnDefinitions>
-            <Button 
-                Name="btn5" 
-                HorizontalAlignment="Stretch" 
-                VerticalAlignment="Stretch" 
-                Background="White" 
-                BorderThickness="0"
-                Grid.Column="0"
-                Click="Add_Item"
-             >
-                <Image Source="/Images/add.png" Stretch="Fill"></Image>
-            </Button>
-        </Grid>
-        <FlowDocumentScrollViewer Grid.Row="1" IsToolBarVisible="False">
-            <FlowDocument>
-                <Table  x:Name="itemsTable">
-                    <TableRowGroup>
-                        <TableRow Background="LightGoldenrodYellow">
-                            <TableCell>
-                                <Paragraph FontSize="14pt" FontWeight="Bold">S.No.</Paragraph>
-                            </TableCell>
-                            <TableCell>
-                                <Paragraph FontSize="14pt" FontWeight="Bold">Barcode</Paragraph>
-                            </TableCell>
-                            <TableCell>
-                                <Paragraph FontSize="14pt" FontWeight="Bold">Item Name</Paragraph>
-                            </TableCell>
-                            <TableCell>
-                                <Paragraph FontSize="14pt" FontWeight="Bold">Description</Paragraph>
-                            </TableCell>
-                            <TableCell>
-                                <Paragraph FontSize="14pt" FontWeight="Bold">MRP</Paragraph>
-                            </TableCell>
-                            <TableCell>
-                                <Paragraph FontSize="14pt" FontWeight="Bold">Qty.</Paragraph>
-                            </TableCell>
-                            <TableCell>
-                                <Paragraph FontSize="14pt" FontWeight="Bold">Amount</Paragraph>
-                            </TableCell>
-                        </TableRow>
-                    </TableRowGroup>
-                </Table>
-            </FlowDocument>
-        </FlowDocumentScrollViewer>
+        <ContentControl x:Name="MainWindowControl" Grid.Row="1" Content="{StaticResource view}"/>
     </Grid>
 </Window>
