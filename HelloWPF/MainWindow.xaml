@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:HelloWPF"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="1000" WindowState="Maximized"
+        Icon="/Images/icon.png"
         KeyDown="keyEventHandler">
     <Window.Resources>
         <local:ViewItemsControl x:Key="view"/>
@@ -13,9 +14,26 @@
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="0.03*"/>
+            <RowDefinition Height="0.01*"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <ContentControl x:Name="MainWindowControl" Grid.Row="1" Content="{StaticResource view}"/>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="0.02*"/>
+                <ColumnDefinition Width="0.2*"/>
+                <ColumnDefinition Width="0.02*"/>
+                <ColumnDefinition Width="0.2*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="1" Background="White" BorderThickness="0" FontWeight="Bold" Click="billScreenButtonEvent">
+                Billing Screen - F1
+            </Button>
+            <Button Grid.Column="3" Background="White" BorderThickness="0" FontWeight="Bold" Click="itemScreenButtonEvent">
+                Items Screen - F2
+            </Button>
+        </Grid>
+        <Border BorderBrush="LightGray" BorderThickness="0,0,0,1"></Border>
+        <ContentControl x:Name="MainWindowControl" Grid.Row="2"/>
     </Grid>
 </Window>

@@ -31,26 +31,42 @@
         </Grid>
         <FlowDocumentScrollViewer Grid.Row="1" IsToolBarVisible="False">
             <FlowDocument>
-                <Table  x:Name="itemsTable">
+                <Table  x:Name="itemsTable" BorderBrush="Black" BorderThickness="1" CellSpacing="0">
+                    <Table.Columns>
+                        <TableColumn Width="0.05*"/>
+                        <TableColumn Width="0.05*"/>
+                        <TableColumn Width="0.05*"/>
+                        <TableColumn Width="0.2*"/>
+                        <TableColumn Width="0.2*"/>
+                        <TableColumn Width="0.25*"/>
+                        <TableColumn Width="0.1*"/>
+                        <TableColumn Width="0.1*"/>
+                    </Table.Columns>
                     <TableRowGroup>
-                        <TableRow Background="LightGoldenrodYellow">
-                            <TableCell>
-                                <Paragraph FontSize="14pt" FontWeight="Bold">S.No.</Paragraph>
+                        <TableRow Background="SteelBlue">
+                            <TableCell BorderBrush="Black" BorderThickness="0,0,1,0" Padding="2">
+                                <Paragraph FontSize="14pt" FontWeight="Bold" TextAlignment="Center">Edit</Paragraph>
                             </TableCell>
-                            <TableCell>
-                                <Paragraph FontSize="14pt" FontWeight="Bold">Barcode</Paragraph>
+                            <TableCell BorderBrush="Black" BorderThickness="0,0,1,0" Padding="2">
+                                <Paragraph FontSize="14pt" FontWeight="Bold" TextAlignment="Center">Delete</Paragraph>
                             </TableCell>
-                            <TableCell>
-                                <Paragraph FontSize="14pt" FontWeight="Bold">Item Name</Paragraph>
+                            <TableCell BorderBrush="Black" BorderThickness="0,0,1,0" Padding="2">
+                                <Paragraph FontSize="14pt" FontWeight="Bold" TextAlignment="Center">S.No.</Paragraph>
                             </TableCell>
-                            <TableCell>
-                                <Paragraph FontSize="14pt" FontWeight="Bold">Description</Paragraph>
+                            <TableCell BorderBrush="Black" BorderThickness="0,0,1,0" Padding="2">
+                                <Paragraph FontSize="14pt" FontWeight="Bold" TextAlignment="Center">Barcode</Paragraph>
                             </TableCell>
-                            <TableCell>
-                                <Paragraph FontSize="14pt" FontWeight="Bold">Cost Price</Paragraph>
+                            <TableCell BorderBrush="Black" BorderThickness="0,0,1,0" Padding="2">
+                                <Paragraph FontSize="14pt" FontWeight="Bold" TextAlignment="Center">Item Name</Paragraph>
                             </TableCell>
-                            <TableCell>
-                                <Paragraph FontSize="14pt" FontWeight="Bold">MRP</Paragraph>
+                            <TableCell BorderBrush="Black" BorderThickness="0,0,1,0" Padding="2">
+                                <Paragraph FontSize="14pt" FontWeight="Bold" TextAlignment="Center">Description</Paragraph>
+                            </TableCell>
+                            <TableCell BorderBrush="Black" BorderThickness="0,0,1,0" Padding="2">
+                                <Paragraph FontSize="14pt" FontWeight="Bold" TextAlignment="Center">Cost Price</Paragraph>
+                            </TableCell>
+                            <TableCell Padding="2">
+                                <Paragraph FontSize="14pt" FontWeight="Bold" TextAlignment="Center">MRP</Paragraph>
                             </TableCell>
                         </TableRow>
                     </TableRowGroup>

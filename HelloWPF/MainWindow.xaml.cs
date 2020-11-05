@@ -21,7 +21,16 @@ namespace HelloWPF
             {
                 MainWindowControl.Content = new ViewItemsControl();
             }
-            
+        }
+
+        private void billScreenButtonEvent(Object Sender, RoutedEventArgs e)
+        {
+            MainWindowControl.Content = new BillingControl();
+        }
+
+        private void itemScreenButtonEvent(Object Sender, RoutedEventArgs e)
+        {
+            MainWindowControl.Content = new ViewItemsControl();
         }
 
     }
