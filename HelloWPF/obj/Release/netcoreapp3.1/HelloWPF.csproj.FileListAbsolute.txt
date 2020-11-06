@@ -27,7 +27,6 @@ F:\Madhan\Workspaces\C#\HelloWPF\HelloWPF\obj\Release\netcoreapp3.1\BillingContr
 F:\Madhan\Workspaces\C#\HelloWPF\HelloWPF\obj\Release\netcoreapp3.1\MainWindow.g.cs
 F:\Madhan\Workspaces\C#\HelloWPF\HelloWPF\obj\Release\netcoreapp3.1\ViewItemsControl.g.cs
 F:\Madhan\Workspaces\C#\HelloWPF\HelloWPF\obj\Release\netcoreapp3.1\App.g.cs
-F:\Madhan\Workspaces\C#\HelloWPF\HelloWPF\obj\Release\netcoreapp3.1\GeneratedInternalTypeHelper.g.cs
 F:\Madhan\Workspaces\C#\HelloWPF\HelloWPF\obj\Release\netcoreapp3.1\HelloWPF_MarkupCompile.cache
 F:\Madhan\Workspaces\C#\HelloWPF\HelloWPF\obj\Release\netcoreapp3.1\HelloWPF_MarkupCompile.lref
 F:\Madhan\Workspaces\C#\HelloWPF\HelloWPF\obj\Release\netcoreapp3.1\AddProductWindow.baml
@@ -45,3 +44,5 @@ F:\Madhan\Workspaces\C#\HelloWPF\HelloWPF\obj\Release\netcoreapp3.1\HelloWPF.pdb
 F:\Madhan\Workspaces\C#\HelloWPF\HelloWPF\obj\Release\netcoreapp3.1\HelloWPF.genruntimeconfig.cache
 F:\Madhan\Workspaces\C#\HelloWPF\HelloWPF\obj\Release\netcoreapp3.1\InvoiceControl.g.cs
 F:\Madhan\Workspaces\C#\HelloWPF\HelloWPF\obj\Release\netcoreapp3.1\InvoiceControl.baml
+F:\Madhan\Workspaces\C#\HelloWPF\HelloWPF\obj\Release\netcoreapp3.1\HomeControl.g.cs
+F:\Madhan\Workspaces\C#\HelloWPF\HelloWPF\obj\Release\netcoreapp3.1\HomeControl.baml

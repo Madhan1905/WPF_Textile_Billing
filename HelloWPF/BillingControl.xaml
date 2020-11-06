@@ -129,7 +129,7 @@
                     <ColumnDefinition Width="0.45*"/>
                     <ColumnDefinition Width="0.05*"/>
                 </Grid.ColumnDefinitions>
-                <Button x:Name="save_button" FontSize="20" FontWeight="Bold" Click="saveInvoiceEvent" GotFocus="savFocusEvent">Save</Button>
+                <Button x:Name="save_button" FontSize="20" FontWeight="Bold" Click="saveInvoiceEvent">Save</Button>
                 <Button FontSize="20" FontWeight="Bold" Grid.Column="2" Click="exitBillingEvent">Exit</Button>
             </Grid>
         </Grid>

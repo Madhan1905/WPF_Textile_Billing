@@ -244,9 +244,9 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "F:\\Madhan\\Workspaces\\C#\\HelloWPF\\HelloWPF\\HelloWPF.csproj",
-      "projectName": "HelloWPF",
-      "projectPath": "F:\\Madhan\\Workspaces\\C#\\HelloWPF\\HelloWPF\\HelloWPF.csproj",
+      "projectUniqueName": "F:\\Madhan\\Workspaces\\C#\\HelloWPF\\HelloWPF\\TextileApp.csproj",
+      "projectName": "TextileApp",
+      "projectPath": "F:\\Madhan\\Workspaces\\C#\\HelloWPF\\HelloWPF\\TextileApp.csproj",
       "packagesPath": "C:\\Users\\hp\\.nuget\\packages\\",
       "outputPath": "F:\\Madhan\\Workspaces\\C#\\HelloWPF\\HelloWPF\\obj\\",
       "projectStyle": "PackageReference",
