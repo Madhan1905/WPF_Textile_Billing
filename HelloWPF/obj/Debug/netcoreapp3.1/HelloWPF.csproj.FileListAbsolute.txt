@@ -43,3 +43,7 @@ F:\Madhan\Workspaces\C#\HelloWPF\HelloWPF\obj\Debug\netcoreapp3.1\GeneratedInter
 F:\Madhan\Workspaces\C#\HelloWPF\HelloWPF\obj\Debug\netcoreapp3.1\HelloWPF.csprojAssemblyReference.cache
 F:\Madhan\Workspaces\C#\HelloWPF\HelloWPF\obj\Debug\netcoreapp3.1\BillingControl.g.cs
 F:\Madhan\Workspaces\C#\HelloWPF\HelloWPF\obj\Debug\netcoreapp3.1\BillingControl.baml
+F:\Madhan\Workspaces\C#\HelloWPF\HelloWPF\obj\Debug\netcoreapp3.1\InvoiceControl.g.cs
+F:\Madhan\Workspaces\C#\HelloWPF\HelloWPF\obj\Debug\netcoreapp3.1\InvoiceControl.baml
+F:\Madhan\Workspaces\C#\HelloWPF\HelloWPF\obj\Debug\netcoreapp3.1\HomeControl.g.cs
+F:\Madhan\Workspaces\C#\HelloWPF\HelloWPF\obj\Debug\netcoreapp3.1\HomeControl.baml

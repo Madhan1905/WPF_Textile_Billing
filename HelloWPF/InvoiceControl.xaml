@@ -1,0 +1,92 @@
+﻿<UserControl x:Class="HelloWPF.InvoiceControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:HelloWPF"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="0.15*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="0.05*"/>
+            <RowDefinition Height="0.15*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="0.01*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="0.01*"/>
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Column="1" UseLayoutRounding="True" SnapsToDevicePixels="True">
+            <Grid.Resources>
+                <Style TargetType="{x:Type Button}">
+                    <Style.Resources>
+                        <Style TargetType="{x:Type Border}">
+                            <Setter Property="CornerRadius" Value="5" />
+                        </Style>
+                    </Style.Resources>
+
+                </Style>
+            </Grid.Resources>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="0.05*"/>
+                <RowDefinition/>
+                <RowDefinition Height="0.05*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="0.1*"/>
+                <ColumnDefinition Width="0.01*"/>
+                <ColumnDefinition Width="0.1*"/>
+                <ColumnDefinition Width="0.01*"/>
+                <ColumnDefinition Width="0.1*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="0.3*"/>
+            </Grid.ColumnDefinitions>
+            <Button Grid.Row="1" Grid.Column="0" Background="White" Click="viewInvoiceEvent">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Image Source="/Images/view_invoice.png"/>
+                    <TextBlock Grid.Row="1" Text="View Bill" FontSize="12"/>
+                </Grid>
+            </Button>
+            <Button Grid.Row="1" Grid.Column="2" Background="White" Click="deleteInvoiceEvent">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Image Source="/Images/remove_invoice.png"/>
+                    <TextBlock Grid.Row="1" Text="Delete Bill" FontSize="12"/>
+                </Grid>
+            </Button>
+            <Button Grid.Row="1" Grid.Column="4" Background="White">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Image Source="/Images/print.png"/>
+                    <TextBlock Grid.Row="1" Text="Print Bill" FontSize="12"/>
+                </Grid>
+            </Button>
+        </Grid>
+        <DataGrid Name="invoiceTable" AutoGenerateColumns="False" CanUserAddRows="False" Grid.Row="1" Grid.Column="1" PreviewKeyDown="dataGridKeyEvent">
+            <DataGrid.RowHeaderTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding RelativeSource={RelativeSource Mode=FindAncestor, 
+                                      AncestorType={x:Type DataGridRow}}, 
+                                      Path=Item.Serial}"/>
+                </DataTemplate>
+            </DataGrid.RowHeaderTemplate>
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Bill No." Binding="{Binding Number}" Width="0.3*" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Bill Date" Binding="{Binding Date}" Width="0.3*" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Total Amount" Binding="{Binding Total}" Width="0.3*" IsReadOnly="True"/>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</UserControl>

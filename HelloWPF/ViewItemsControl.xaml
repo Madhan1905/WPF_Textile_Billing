@@ -14,11 +14,9 @@
         <Grid  Grid.Row="0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="0.05*"/>
-                <ColumnDefinition Width="0.05*"/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
             <Button 
-                Name="btn5" 
                 HorizontalAlignment="Stretch" 
                 VerticalAlignment="Stretch" 
                 Background="White" 
@@ -30,15 +28,15 @@
             </Button>
         </Grid>
         <FlowDocumentScrollViewer Grid.Row="1" IsToolBarVisible="False">
-            <FlowDocument>
+            <FlowDocument x:Name="itemsDoc">
                 <Table  x:Name="itemsTable" BorderBrush="Black" BorderThickness="1" CellSpacing="0">
                     <Table.Columns>
                         <TableColumn Width="0.05*"/>
                         <TableColumn Width="0.05*"/>
                         <TableColumn Width="0.05*"/>
                         <TableColumn Width="0.2*"/>
-                        <TableColumn Width="0.2*"/>
-                        <TableColumn Width="0.25*"/>
+                        <TableColumn Width="0.45*"/>
+                        <TableColumn Width="0.1*"/>
                         <TableColumn Width="0.1*"/>
                         <TableColumn Width="0.1*"/>
                     </Table.Columns>
@@ -60,10 +58,10 @@
                                 <Paragraph FontSize="14pt" FontWeight="Bold" TextAlignment="Center">Item Name</Paragraph>
                             </TableCell>
                             <TableCell BorderBrush="Black" BorderThickness="0,0,1,0" Padding="2">
-                                <Paragraph FontSize="14pt" FontWeight="Bold" TextAlignment="Center">Description</Paragraph>
+                                <Paragraph FontSize="14pt" FontWeight="Bold" TextAlignment="Center">Cost Price</Paragraph>
                             </TableCell>
                             <TableCell BorderBrush="Black" BorderThickness="0,0,1,0" Padding="2">
-                                <Paragraph FontSize="14pt" FontWeight="Bold" TextAlignment="Center">Cost Price</Paragraph>
+                                <Paragraph FontSize="14pt" FontWeight="Bold" TextAlignment="Center">Selling Price</Paragraph>
                             </TableCell>
                             <TableCell Padding="2">
                                 <Paragraph FontSize="14pt" FontWeight="Bold" TextAlignment="Center">MRP</Paragraph>

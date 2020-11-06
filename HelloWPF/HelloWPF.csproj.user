@@ -15,6 +15,12 @@
     <Compile Update="BillingControl.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="HomeControl.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="InvoiceControl.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="ViewItemsControl.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -27,6 +33,12 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Dictionary1.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="HomeControl.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="InvoiceControl.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="MainWindow.xaml">

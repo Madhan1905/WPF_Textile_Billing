@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HelloWPF.Classes;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -14,8 +15,8 @@ namespace HelloWPF
     /// </summary>
     public partial class App : Application
     {
-        static string databaseName = "Products.db";
         static string folderPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-        public static string databasePath = Path.Combine(folderPath, databaseName);
+        public static string productDatabasePath = Path.Combine(folderPath, "Products.db");
+        public static Invoice currentInvoice = null;
     }
 }

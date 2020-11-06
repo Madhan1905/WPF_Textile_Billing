@@ -4,6 +4,7 @@ using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
@@ -22,7 +23,7 @@ namespace HelloWPF
 
         private void populateTable()
         {
-            using (SQLiteConnection dbConnection = new SQLiteConnection(App.databasePath))
+            using (SQLiteConnection dbConnection = new SQLiteConnection(App.productDatabasePath))
             {
                 dbConnection.CreateTable<Product>();
                 var products = dbConnection.Table<Product>().ToList();
@@ -45,8 +46,8 @@ namespace HelloWPF
                     creatTableCell((rowIndex+1).ToString(), newRow, true, true);
                     creatTableCell(product.Barcode, newRow, true, true);
                     creatTableCell(product.Name, newRow, true, false);
-                    creatTableCell(product.Description, newRow, true, false);
                     creatTableCell(product.Cost, newRow, true, true);
+                    creatTableCell(product.SellingPrice, newRow, true, true);
                     creatTableCell(product.MRP, newRow, false, true);
                     rowIndex++;
                 }
@@ -91,7 +92,7 @@ namespace HelloWPF
             switch (result)
             {
                 case MessageBoxResult.Yes:
-                    using (SQLiteConnection dbConnection = new SQLiteConnection(App.databasePath))
+                    using (SQLiteConnection dbConnection = new SQLiteConnection(App.productDatabasePath))
                     {
                         dbConnection.CreateTable<Product>();
                         dbConnection.Delete(product);
@@ -135,11 +136,16 @@ namespace HelloWPF
 
         private void Add_Item(Object Sender, RoutedEventArgs e)
         {
+            addData();
+        }
+
+        public void addData()
+        {
             Product product = new Product()
             {
                 Barcode = "",
                 Name = "",
-                Description = "",
+                SellingPrice = "",
                 Cost = "",
                 MRP = ""
             };
