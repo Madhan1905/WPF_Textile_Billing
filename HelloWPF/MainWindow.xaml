@@ -5,10 +5,27 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:HelloWPF"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="1000" WindowState="Maximized"
+        Title="Thinkershut" Height="450" Width="1000" WindowState="Maximized"
         Icon="/Images/icon.png"
         KeyDown="keyEventHandler">
     <Grid>
-        <ContentControl x:Name="MainWindowControl" Grid.Row="2" Content="home"/>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="0.075*"/>
+        </Grid.RowDefinitions>
+        <ContentControl x:Name="MainWindowControl" Grid.Row="0" Content="home"/>
+        <Grid Background="LightSlateGray" Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="0.35*"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="0.3*"/>
+                <ColumnDefinition Width="0.05*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Text="Thinker's Hut | Help: 8870395228" FontWeight="Bold" Grid.Row="1" Margin="50,0,0,0" FontSize="20"/>
+            <Label Name="LiveTimerText" Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" HorizontalContentAlignment="Right" FontSize="20" VerticalContentAlignment="Center"/>
+        </Grid>
     </Grid>
 </Window>

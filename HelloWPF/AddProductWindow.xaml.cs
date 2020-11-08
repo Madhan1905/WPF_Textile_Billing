@@ -28,7 +28,7 @@ namespace HelloWPF
 
             barcode.Text = product.Barcode;
             name.Text = product.Name;
-            selling_price.Text = product.SellingPrice;
+            printName.Text = product.PrintName;
             cost.Text = product.Cost;
             mrp.Text = product.MRP;
             if (!product.Barcode.Equals(""))
@@ -42,10 +42,15 @@ namespace HelloWPF
             submitData();
         }
 
+        private void submitFocusEvent(Object sender, RoutedEventArgs e)
+        {
+            Console.WriteLine("");
+        }
+
         private void submitData()
         {
-            if (barcode.Text.Trim().Equals("") || name.Text.Trim().Equals("") || 
-                selling_price.Text.Trim().Equals("") || cost.Text.Trim().Equals("") || mrp.Text.Trim().Equals(""))
+            if (barcode.Text.Trim().Equals("") || name.Text.Trim().Equals("") ||
+                printName.Text.Trim().Equals("") || cost.Text.Trim().Equals("") || mrp.Text.Trim().Equals(""))
             {
                 error_text.Visibility = Visibility.Visible;
             }
@@ -59,7 +64,7 @@ namespace HelloWPF
                 {
                     Barcode = barcode.Text,
                     Name = name.Text,
-                    SellingPrice = selling_price.Text,
+                    PrintName = printName.Text,
                     Cost = cost.Text,
                     MRP = mrp.Text
                 };
@@ -100,7 +105,9 @@ namespace HelloWPF
             switch (e.Key)
             {
                 case Key.Enter:
-                    submitData();
+                    KeyEventArgs args = new KeyEventArgs(Keyboard.PrimaryDevice,Keyboard.PrimaryDevice.ActiveSource, 0, Key.Tab);
+                    args.RoutedEvent = Keyboard.KeyDownEvent;
+                    InputManager.Current.ProcessInput(args);
                     break;
                 case Key.Escape:
                     Close();

@@ -45,3 +45,4 @@ F:\Madhan\Workspaces\C#\HelloWPF\HelloWPF\obj\Release\netcoreapp3.1\TextileApp.c
 F:\Madhan\Workspaces\C#\HelloWPF\HelloWPF\obj\Release\netcoreapp3.1\TextileApp.dll
 F:\Madhan\Workspaces\C#\HelloWPF\HelloWPF\obj\Release\netcoreapp3.1\TextileApp.pdb
 F:\Madhan\Workspaces\C#\HelloWPF\HelloWPF\obj\Release\netcoreapp3.1\TextileApp.genruntimeconfig.cache
+F:\Madhan\Workspaces\C#\HelloWPF\HelloWPF\obj\Release\netcoreapp3.1\TextileApp.csprojAssemblyReference.cache

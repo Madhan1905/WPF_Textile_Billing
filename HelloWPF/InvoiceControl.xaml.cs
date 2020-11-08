@@ -25,34 +25,47 @@ namespace HelloWPF
         {
             InitializeComponent();
             this.MainWindowControl = WindowControl;
-            populateInvoiceTable();
+            populateInvoiceTable(DateTime.Now.ToString("dd/M/yyyy"));
         }
 
-        private void populateInvoiceTable()
+        private void populateInvoiceTable(string date)
         {
             List<Invoice> invoices = new List<Invoice>();
             using (SQLiteConnection dbConnection = new SQLiteConnection(App.productDatabasePath))
             {
                 dbConnection.CreateTable<Invoice>();
                 invoices = dbConnection.Table<Invoice>().ToList();
+                var sql_cmd = dbConnection.CreateCommand("SELECT * FROM 'Invoice' WHERE Date=='"+date+"'");
+                invoices = sql_cmd.ExecuteQuery<Invoice>();
             }
             invoiceTable.ItemsSource = invoices;
             invoiceTable.Items.Refresh();
         }
 
+        private void dateChangedEvent(Object sender, SelectionChangedEventArgs e)
+        {
+            DateTime date = (DateTime)dateBox.SelectedDate;
+            populateInvoiceTable(date.ToString("dd/M/yyyy"));
+        }
+
         private void viewInvoiceEvent(Object Sender, RoutedEventArgs e)
         {
-            Invoice invoice = invoiceTable.SelectedItem as Invoice;
-            if(invoice != null)
-            {
-                App.currentInvoice = invoice;
-                MainWindowControl.Content = new BillingControl(invoice, MainWindowControl);
-            }
+            viewInvoice();
         }
 
         private void deleteInvoiceEvent(Object Sender, RoutedEventArgs e)
         {
             deleteInvoice();
+        }
+
+        private void viewInvoice()
+        {
+            Invoice invoice = invoiceTable.SelectedItem as Invoice;
+            if (invoice != null)
+            {
+                App.currentInvoice = invoice;
+                MainWindowControl.Content = new BillingControl(invoice, MainWindowControl);
+            }
         }
 
         private void deleteInvoice()
@@ -83,9 +96,17 @@ namespace HelloWPF
 
         private void dataGridKeyEvent(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.Delete && invoiceTable.SelectedItem != null)
+            if (invoiceTable.SelectedItem != null)
             {
-                deleteInvoice();
+                switch (e.Key)
+                {
+                    case Key.Delete:
+                        deleteInvoice();
+                        break;
+                    case Key.Enter:
+                        viewInvoice();
+                        break;
+                }
             }
         }
     }

@@ -46,8 +46,8 @@ namespace HelloWPF
                     creatTableCell((rowIndex+1).ToString(), newRow, true, true);
                     creatTableCell(product.Barcode, newRow, true, true);
                     creatTableCell(product.Name, newRow, true, false);
+                    creatTableCell(product.PrintName, newRow, true, true);
                     creatTableCell(product.Cost, newRow, true, true);
-                    creatTableCell(product.SellingPrice, newRow, true, true);
                     creatTableCell(product.MRP, newRow, false, true);
                     rowIndex++;
                 }
@@ -56,7 +56,7 @@ namespace HelloWPF
 
         private void createTableIconCell(TableRow row, int rowIndex, string type, Product product)
         {
-            string uriPath = "pack://application:,,,/HelloWPF;component/Images/" + (type.Equals("edit") ? "edit.png" : "delete.png");
+            string uriPath = "pack://application:,,,/TextileApp;component/Images/" + (type.Equals("edit") ? "edit.png" : "delete.png");
             Image image = new Image { Source = new BitmapImage(new Uri(uriPath)) };
             image.Height = 25;
             image.Width = 20;

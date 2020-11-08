@@ -13,18 +13,19 @@
         </Grid.RowDefinitions>
         <Grid  Grid.Row="0">
             <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="0.015*"/>
                 <ColumnDefinition Width="0.05*"/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <Button 
-                HorizontalAlignment="Stretch" 
-                VerticalAlignment="Stretch" 
-                Background="White" 
-                BorderThickness="0"
-                Grid.Column="0"
-                Click="Add_Item"
-             >
-                <Image Source="/Images/add.png" Stretch="Fill"></Image>
+            <Button Grid.Column="1" Background="White" Click="Add_Item" BorderThickness="0">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Image Source="/Images/add.png"/>
+                    <TextBlock Grid.Row="1" Text="Add Item" FontSize="12"/>
+                </Grid>
             </Button>
         </Grid>
         <FlowDocumentScrollViewer Grid.Row="1" IsToolBarVisible="False">
@@ -35,8 +36,8 @@
                         <TableColumn Width="0.05*"/>
                         <TableColumn Width="0.05*"/>
                         <TableColumn Width="0.2*"/>
-                        <TableColumn Width="0.45*"/>
-                        <TableColumn Width="0.1*"/>
+                        <TableColumn Width="0.35*"/>
+                        <TableColumn Width="0.2*"/>
                         <TableColumn Width="0.1*"/>
                         <TableColumn Width="0.1*"/>
                     </Table.Columns>
@@ -58,10 +59,10 @@
                                 <Paragraph FontSize="14pt" FontWeight="Bold" TextAlignment="Center">Item Name</Paragraph>
                             </TableCell>
                             <TableCell BorderBrush="Black" BorderThickness="0,0,1,0" Padding="2">
-                                <Paragraph FontSize="14pt" FontWeight="Bold" TextAlignment="Center">Cost Price</Paragraph>
+                                <Paragraph FontSize="14pt" FontWeight="Bold" TextAlignment="Center">Print Name</Paragraph>
                             </TableCell>
                             <TableCell BorderBrush="Black" BorderThickness="0,0,1,0" Padding="2">
-                                <Paragraph FontSize="14pt" FontWeight="Bold" TextAlignment="Center">Selling Price</Paragraph>
+                                <Paragraph FontSize="14pt" FontWeight="Bold" TextAlignment="Center">Cost Price</Paragraph>
                             </TableCell>
                             <TableCell Padding="2">
                                 <Paragraph FontSize="14pt" FontWeight="Bold" TextAlignment="Center">MRP</Paragraph>

@@ -13,9 +13,7 @@ using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace HelloWPF
 {
@@ -29,6 +27,7 @@ namespace HelloWPF
         public BillingControl(Invoice invoice, ContentControl WindowControl)
         {
             InitializeComponent();
+
             this.invoice = invoice;
             this.MainWindowControl = WindowControl;
 
@@ -47,8 +46,16 @@ namespace HelloWPF
                 products = new List<BillingProduct>();
             }
             int sum = products.Sum(product => product.Total);
+            totalItemsText.Text = "Total Items:" + products.Count.ToString();
             grandTotalText.Text = formatTotal(sum);
             billTable.ItemsSource = products;
+        }
+
+        private void dataGridLoaded(Object sender, RoutedEventArgs e)
+        {
+            billTable.SelectedIndex = 0;
+            billTable.CurrentCell = new DataGridCellInfo(billTable.Items[0], billTable.Columns[0]);
+            billTable.BeginEdit();
         }
 
         private void billTableCellEditEvent(object sender, DataGridCellEditEndingEventArgs e)
@@ -75,36 +82,56 @@ namespace HelloWPF
                                 product.Quantity = 1;
                                 product.Total = int.Parse(queryProducts[0].SellingPrice);
                                 product.Serial = products.IndexOf(product)+1;
-                                grandTotalText.Text = formatTotal(int.Parse(grandTotalText.Text) + int.Parse(queryProducts[0].SellingPrice));
+
+                                int sum = products.Sum(product => product.Total);
+                                grandTotalText.Text = formatTotal(sum);
                                 invoice.BillingProducts = JsonSerializer.Serialize<List<BillingProduct>>(products);
+                                totalItemsText.Text = "Total Items:" +products.Count.ToString();
+
+                                billTable.CellEditEnding -= billTableCellEditEvent;
+                                billTable.CommitEdit();
+                                billTable.CommitEdit();
+                                billTable.Items.Refresh();
+                                billTable.CellEditEnding += billTableCellEditEvent;
                             }
                             else
                             {
                                 MessageBox.Show("Barcode not Found", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                                billTable.CellEditEnding -= billTableCellEditEvent;
+                                billTable.CancelEdit();
+                                billTable.CancelEdit();
+                                billTable.Items.Refresh();
+                                billTable.CellEditEnding += billTableCellEditEvent;
                             }
                         }
                     }
                 } else
                 {
                     var el = e.EditingElement as TextBox;
-                    if (!el.Text.Equals(""))
+                    if (!el.Text.Equals("") && int.TryParse(el.Text,out _))
                     {
                         BillingProduct product = (BillingProduct)billTable.SelectedItem;
                         product.Quantity = int.Parse(el.Text);
-                        product.Total = product.Quantity * product.MRP;
+                        product.Total = product.Quantity * product.SellingPrice;
 
                         int sum = products.Sum(product => product.Total);
                         grandTotalText.Text = formatTotal(sum);
+
+                        billTable.CellEditEnding -= billTableCellEditEvent;
+                        billTable.CommitEdit();
+                        billTable.CommitEdit();
+                        billTable.Items.Refresh();
+                        billTable.CellEditEnding += billTableCellEditEvent;
+                    } else
+                    {
+                        billTable.CellEditEnding -= billTableCellEditEvent;
+                        billTable.CancelEdit();
+                        billTable.CancelEdit();
+                        billTable.Items.Refresh();
+                        billTable.CellEditEnding += billTableCellEditEvent;
                     }
                 }
             }
-            billTable.CellEditEnding -= billTableCellEditEvent;
-            billTable.CommitEdit();
-            billTable.CommitEdit();
-            billTable.CancelEdit();
-            billTable.CancelEdit();
-            billTable.Items.Refresh();
-            billTable.CellEditEnding += billTableCellEditEvent;
         }
 
         private string formatTotal(int value)
@@ -121,13 +148,19 @@ namespace HelloWPF
             e.Handled = regex.IsMatch(e.Text);
         }
 
+        private void NonNegativeNumberValidationEvent(Object sender, TextCompositionEventArgs e)
+        {
+            Regex regex = new Regex("[^0-9]+");
+            e.Handled = regex.IsMatch(e.Text);
+        }
+
         private void saveInvoiceEvent(Object sender, RoutedEventArgs e)
         {
             MessageBoxResult result = MessageBox.Show("Do you want to print?", "Confirmation", MessageBoxButton.YesNo);
             switch (result)
             {
                 case MessageBoxResult.Yes:
-                    
+                    printBill();
                     break;
                 case MessageBoxResult.No:break;
             }
@@ -153,6 +186,90 @@ namespace HelloWPF
             }
         }
 
+        private void printBill()
+        {
+            FlowDocument flowDocument = new FlowDocument();
+            Table table = new Table();
+            TableRowGroup rowGroup = new TableRowGroup();
+            table.RowGroups.Add(rowGroup);
+            TableRow row = new TableRow();
+            rowGroup.Rows.Add(row);
+
+            Paragraph paragraph = new Paragraph(new Run("Product"));
+            paragraph.FontFamily = new FontFamily("Futura Medium");
+            TableCell tableCell = new TableCell(paragraph);
+            tableCell.Padding = new Thickness(2);
+            tableCell.TextAlignment = TextAlignment.Center;
+            row.Cells.Add(tableCell);
+
+            paragraph = new Paragraph(new Run("Qty."));
+            paragraph.FontFamily = new FontFamily("Futura Medium");
+            tableCell = new TableCell(paragraph);
+            tableCell.Padding = new Thickness(2);
+            tableCell.TextAlignment = TextAlignment.Center;
+            row.Cells.Add(tableCell);
+
+            paragraph = new Paragraph(new Run("Price"));
+            paragraph.FontFamily = new FontFamily("Futura Medium");
+            tableCell = new TableCell(paragraph);
+            tableCell.Padding = new Thickness(2);
+            tableCell.TextAlignment = TextAlignment.Center;
+            row.Cells.Add(tableCell);
+
+            paragraph = new Paragraph(new Run("Total"));
+            paragraph.FontFamily = new FontFamily("Futura Medium");
+            tableCell = new TableCell(paragraph);
+            tableCell.Padding = new Thickness(2);
+            tableCell.TextAlignment = TextAlignment.Center;
+            row.Cells.Add(tableCell);
+
+            String productString = App.currentInvoice.BillingProducts;
+            List<BillingProduct> products = JsonSerializer.Deserialize<List<BillingProduct>>(App.currentInvoice.BillingProducts);
+            foreach (BillingProduct product in products)
+            {
+                row = new TableRow();
+                rowGroup.Rows.Add(row);
+
+                paragraph = new Paragraph(new Run(product.Name));
+                paragraph.FontFamily = new FontFamily("Futura Medium");
+                tableCell = new TableCell(paragraph);
+                tableCell.Padding = new Thickness(2);
+                tableCell.TextAlignment = TextAlignment.Center;
+                row.Cells.Add(tableCell);
+
+                paragraph = new Paragraph(new Run(product.Quantity.ToString()));
+                paragraph.FontFamily = new FontFamily("Futura Medium");
+                tableCell = new TableCell(paragraph);
+                tableCell.Padding = new Thickness(2);
+                tableCell.TextAlignment = TextAlignment.Center;
+                row.Cells.Add(tableCell);
+
+                paragraph = new Paragraph(new Run(product.SellingPrice.ToString()));
+                paragraph.FontFamily = new FontFamily("Futura Medium");
+                tableCell = new TableCell(paragraph);
+                tableCell.Padding = new Thickness(2);
+                tableCell.TextAlignment = TextAlignment.Center;
+                row.Cells.Add(tableCell);
+
+                paragraph = new Paragraph(new Run(product.Total.ToString()));
+                paragraph.FontFamily = new FontFamily("Futura Medium");
+                tableCell = new TableCell(paragraph);
+                tableCell.Padding = new Thickness(2);
+                tableCell.TextAlignment = TextAlignment.Center;
+                row.Cells.Add(tableCell);
+            }
+
+            flowDocument.Blocks.Add(table);
+
+            PrintDialog dialog = new PrintDialog();
+            bool result = (bool)dialog.ShowDialog();
+            if (result)
+            {
+                IDocumentPaginatorSource idpSource = flowDocument;
+                dialog.PrintDocument(idpSource.DocumentPaginator, "Bill");
+            }
+        }
+
         private void exitBillingEvent(Object sender, RoutedEventArgs e)
         {
             exitBilling();
@@ -160,7 +277,7 @@ namespace HelloWPF
 
         public bool exitBilling()
         {
-            MessageBoxResult result = MessageBox.Show("Are you sure, you want to delete?", "Confirmation", MessageBoxButton.YesNo);
+            MessageBoxResult result = MessageBox.Show("Are you sure, you want to exit?", "Confirmation", MessageBoxButton.YesNo);
             switch (result)
             {
                 case MessageBoxResult.Yes:
@@ -190,6 +307,11 @@ namespace HelloWPF
             return false;
         }
 
+        private void dataGridLoadingRow(Object sender, DataGridRowEventArgs e)
+        {
+            e.Row.Header = (e.Row.GetIndex() + 1).ToString();
+        }
+
         private void dataGridKeyEvent(object sender, KeyEventArgs e)
         {
             if(billTable.SelectedItem != null)
@@ -198,23 +320,22 @@ namespace HelloWPF
                 {
                     case Key.Delete:
                         BillingProduct product = billTable.SelectedItem as BillingProduct;
+                        grandTotalText.Text = formatTotal(int.Parse(grandTotalText.Text) - product.Total);
                         products.Remove(product);
                         billTable.ItemsSource = products;
+                        totalItemsText.Text = "Total Items:" + products.Count.ToString();
                         billTable.Items.Refresh();
                         break;
-                    case Key.Back:
-                        int index = billTable.SelectedIndex;
-                        if (index > 0)
-                        {
-                            billTable.SelectedIndex = index - 1;
-                            billTable.CurrentCell = new DataGridCellInfo(
-                                 billTable.Items[index - 1], billTable.Columns[2]);
-                            billTable.BeginEdit();
-                        }
-                        break;
-                    case Key.Enter:
-                        break;
                 }
+            }
+        }
+
+        private void dicountChangedEvent(Object sender, TextChangedEventArgs e)
+        {
+            if (!discountText.Text.Equals(""))
+            {
+                int sum = products.Sum(product => product.Total);
+                grandTotalText.Text = formatTotal(sum - int.Parse(discountText.Text));
             }
         }
     }

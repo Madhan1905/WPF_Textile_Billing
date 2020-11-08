@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Threading;
 
 namespace HelloWPF
 {
@@ -14,6 +15,10 @@ namespace HelloWPF
         {
             InitializeComponent();
             MainWindowControl.Content = new HomeControl(MainWindowControl);
+            DispatcherTimer timer = new DispatcherTimer();
+            timer.Interval = TimeSpan.FromSeconds(1);
+            timer.Tick += timer_tick;
+            timer.Start();
         }
 
         private void keyEventHandler(object sender, KeyEventArgs e)
@@ -76,6 +81,11 @@ namespace HelloWPF
                     break;
             }
 
+        }
+
+        void timer_tick(Object sender, EventArgs e)
+        {
+            LiveTimerText.Content = DateTime.Now.ToString("HH:mm:ss");
         }
     }
 }

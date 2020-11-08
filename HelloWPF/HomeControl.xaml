@@ -7,36 +7,81 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="0.03*"/>
-            <RowDefinition Height="0.01*"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-        <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="0.2*"/>
+            <ColumnDefinition Width="0.8*"/>
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Column="0" Background="LightSteelBlue">
+            <Grid.Resources>
+                <Style TargetType="{x:Type Button}">
+                    <Setter Property="Margin" Value="10,0"/>
+                </Style>
+            </Grid.Resources>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="0.01*"/>
+                <RowDefinition Height="0.02*"/>
+                <RowDefinition Height="0.01*"/>
+                <RowDefinition Height="0.03*"/>
+                <RowDefinition Height="0.01*"/>
+                <RowDefinition Height="0.03*"/>
+                <RowDefinition Height="0.01*"/>
+                <RowDefinition Height="0.03*"/>
+                <RowDefinition Height="0.01*"/>
+                <RowDefinition Height="0.03*"/>
+                <RowDefinition Height="0.3*"/>
+            </Grid.RowDefinitions>
+            <TextBlock Grid.Row="1" Grid.Column="1" Text="Quick Access" FontWeight="ExtraBold" FontSize="20" Background="White" Padding="10,0"/>
+            <Button 
+                Grid.Row="3" Grid.Column="1" Background="LightSteelBlue" BorderThickness="0" FontSize="20"
+                FontWeight="Bold" Click="billScreenButtonEvent" x:Name="billScreenButton" HorizontalContentAlignment="Left">
+                F2 - Billing
+            </Button>
+            <Button 
+                Grid.Row="5" Grid.Column="1" Background="LightSteelBlue" BorderThickness="0" FontSize="20"
+                FontWeight="Bold" Click="itemScreenButtonEvent" x:Name="itemScreenButton" HorizontalContentAlignment="Left">
+                F3 - Add Items
+            </Button>
+            <Button 
+                Grid.Row="7" Grid.Column="1" Background="LightSteelBlue" BorderThickness="0" FontSize="20"
+                FontWeight="Bold" Click="invoiceScreenButtonEvent" x:Name="invoiceScreenButton" HorizontalContentAlignment="Left">
+                F4 - View Bills
+            </Button>
+            <Button 
+                Grid.Row="9" Grid.Column="1" Background="LightSteelBlue" BorderThickness="0" FontSize="20"
+                FontWeight="Bold" Click="quitEvent" HorizontalContentAlignment="Left">
+                Quit
+            </Button>
+        </Grid>
+        <Grid Grid.Column="1">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="0.02*"/>
-                <ColumnDefinition Width="0.2*"/>
-                <ColumnDefinition Width="0.02*"/>
-                <ColumnDefinition Width="0.2*"/>
-                <ColumnDefinition Width="0.02*"/>
-                <ColumnDefinition Width="0.2*"/>
+                <ColumnDefinition Width="0.05*"/>
                 <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="0.05*"/>
             </Grid.ColumnDefinitions>
-            <Button 
-                Grid.Column="1" Background="White" BorderThickness="0" 
-                FontWeight="Bold" Click="billScreenButtonEvent" x:Name="billScreenButton">
-                Billing - F2
-            </Button>
-            <Button 
-                Grid.Column="3" Background="White" BorderThickness="0" 
-                FontWeight="Bold" Click="itemScreenButtonEvent" x:Name="itemScreenButton">
-                Add Items - F3
-            </Button>
-            <Button 
-                Grid.Column="5" Background="White" BorderThickness="0" 
-                FontWeight="Bold" Click="invoiceScreenButtonEvent" x:Name="invoiceScreenButton">
-                View Bills - F4
-            </Button>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="0.05*"/>
+                <RowDefinition Height="0.2*"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <GroupBox Header="Dashboard" Grid.Column="1" Grid.Row="1" VerticalContentAlignment="Center" FontSize="18">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="0.3*"/>
+                        <ColumnDefinition Width="0.7*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="0.1*"/>
+                        <RowDefinition Height="0.35*"/>
+                        <RowDefinition Height="0.1*"/>
+                        <RowDefinition Height="0.35*"/>
+                        <RowDefinition Height="0.1*"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Row="1" Text="Total Sales" FontWeight="Bold"/>
+                    <TextBlock Grid.Row="3" Text="Total Amount" FontWeight="Bold"/>
+                    <TextBox x:Name="sales_text" Grid.Column="1" Grid.Row="1" Text="0" IsReadOnly="True"/>
+                    <TextBox x:Name="amount_text" Grid.Column="1" Grid.Row="3" Text="0" IsReadOnly="True"/>
+                </Grid>
+            </GroupBox>
         </Grid>
     </Grid>
 </UserControl>

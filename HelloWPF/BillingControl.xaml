@@ -8,13 +8,15 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
         <Style x:Key="ColumnHeaderStyle" TargetType="DataGridColumnHeader">
-            <Setter Property="Height" Value="30"/>
+            <Setter Property="Height" Value="40"/>
             <Setter Property="FontWeight" Value="DemiBold"/>
-            <Setter Property="FontSize" Value="18" />
+            <Setter Property="FontSize" Value="25" />
+        </Style>
+        <Style x:Key="RowHeaderStyle" TargetType="DataGridRowHeader">
+            <Setter Property="Width" Value="25"/>
         </Style>
         <Style x:Key="CellStyle" TargetType="DataGridCell">
-            <Setter Property="Height" Value="30"/>
-            <Setter Property="FontSize" Value="15" />
+            <Setter Property="FontSize" Value="22" />
             <Setter Property="VerticalContentAlignment" Value="Center" />
             <Style.Triggers>
                 <Trigger Property="IsFocused" Value="True">
@@ -28,8 +30,7 @@
             <RowDefinition Height="0.15*"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="0.05*"/>
-            <RowDefinition Height="0.3*"/>
-            <RowDefinition Height="0.05*"/>
+            <RowDefinition Height="0.25*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="0.01*"/>
@@ -75,18 +76,13 @@
                 <TextBox x:Name="dateTextBox" Grid.Column="2" Grid.Row="3" VerticalContentAlignment="Center" IsReadOnly="True" FontSize="15"/>
             </Grid>
         </Grid>
-        <DataGrid Name="billTable" AutoGenerateColumns="False" Grid.Row="1" 
-                  Grid.Column="1" ColumnHeaderStyle="{StaticResource ColumnHeaderStyle}" CellStyle="{StaticResource CellStyle}" PreviewKeyDown="dataGridKeyEvent">
-            <DataGrid.RowHeaderTemplate>
-                <DataTemplate>
-                    <TextBlock Text="{Binding RelativeSource={RelativeSource Mode=FindAncestor, 
-                                      AncestorType={x:Type DataGridRow}}, 
-                                      Path=Item.Serial}"/>
-                </DataTemplate>
-            </DataGrid.RowHeaderTemplate>
+        <DataGrid Name="billTable" AutoGenerateColumns="False" Grid.Row="1" Loaded="dataGridLoaded"
+                  Grid.Column="1" ColumnHeaderStyle="{StaticResource ColumnHeaderStyle}" CellStyle="{StaticResource CellStyle}" 
+                  PreviewKeyDown="dataGridKeyEvent" LoadingRow="dataGridLoadingRow" RowHeaderStyle="{StaticResource RowHeaderStyle}">
+
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Barcode" Binding="{Binding Barcode}" Width="0.2*"/>
-                <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="0.4*" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="0.35*" IsReadOnly="True"/>
                 <DataGridTextColumn Header="Qty." Binding="{Binding Quantity}" Width="0.1*"/>
                 <DataGridTextColumn Header="Selling Price" Binding="{Binding SellingPrice}" Width="0.1*" IsReadOnly="True"/>
                 <DataGridTextColumn Header="MRP" Binding="{Binding MRP}" Width="0.1*" IsReadOnly="True"/>
@@ -99,20 +95,38 @@
                 <RowDefinition Height="0.5*"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition/>
+                <ColumnDefinition Width="0.1*"/>
+                <ColumnDefinition Width="0.2*"/>
+                <ColumnDefinition Width="0.2*"/>
                 <ColumnDefinition Width="0.3*"/>
+                <ColumnDefinition Width="0.2*"/>
             </Grid.ColumnDefinitions>
             <Grid Grid.Column="1" VerticalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="0.5*"/>
+                    <ColumnDefinition Width="0.5*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock x:Name="totalItemsText" Text="Total Items:" FontSize="20"/>
+            </Grid>
+            <Grid Grid.Column="2" VerticalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="0.5*"/>
+                    <ColumnDefinition Width="0.5*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="Discount" FontSize="20"/>
+                <TextBox Grid.Column="1" x:Name="discountText" PreviewTextInput="NonNegativeNumberValidationEvent" TextChanged="dicountChangedEvent" VerticalContentAlignment="Center"/>
+            </Grid>
+            <Grid Grid.Column="3" Grid.ColumnSpan="2" VerticalAlignment="Center">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="0.5*"/>
                     <ColumnDefinition Width="0.45*"/>
                     <ColumnDefinition Width="0.05*"/>
                 </Grid.ColumnDefinitions>
-                <TextBlock Text="Grand Total" FontSize="30" FontWeight="Bold" Foreground="Red"/>
-                <TextBox x:Name="grandTotalText" Grid.Column="1" Text="0" VerticalContentAlignment="Center" FontSize="30" 
+                <TextBlock Text="Grand Total" FontSize="40" FontWeight="Bold" Foreground="Red"/>
+                <TextBox x:Name="grandTotalText" Grid.Column="1" Text="0" VerticalContentAlignment="Center" FontSize="40" 
                          FontWeight="Bold" IsReadOnly="True" Foreground="Red"/>
             </Grid>
-            <Grid Grid.Column="1" Grid.Row="1" VerticalAlignment="Center">
+            <Grid Grid.Column="4" Grid.Row="1" VerticalAlignment="Center">
                 <Grid.Resources>
                     <Style TargetType="{x:Type Button}">
                         <Style.Resources>
@@ -132,13 +146,6 @@
                 <Button x:Name="save_button" FontSize="20" FontWeight="Bold" Click="saveInvoiceEvent">Save</Button>
                 <Button FontSize="20" FontWeight="Bold" Grid.Column="2" Click="exitBillingEvent">Exit</Button>
             </Grid>
-        </Grid>
-        <Grid Background="LightSlateGray" Grid.Row="4" Grid.ColumnSpan="3">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="0.15*"/>
-                <RowDefinition/>
-            </Grid.RowDefinitions>
-            <TextBlock Text="Thinker's Hut | Help: 8870395228" FontWeight="Bold" Grid.Row="1" Margin="50,0,0,0"/>
         </Grid>
     </Grid>
 </UserControl>

@@ -2,6 +2,7 @@
 using SQLite;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -25,6 +26,18 @@ namespace HelloWPF
         {
             InitializeComponent();
             MainWindowControl = WindowControl;
+
+            List<Invoice> invoices = new List<Invoice>();
+            using (SQLiteConnection dbConnection = new SQLiteConnection(App.productDatabasePath))
+            {
+                dbConnection.CreateTable<Invoice>();
+                invoices = dbConnection.Table<Invoice>().ToList();
+                var sql_cmd = dbConnection.CreateCommand("SELECT * FROM 'Invoice' WHERE Date=='" + DateTime.Now.ToString("dd/M/yyyy") + "'");
+                invoices = sql_cmd.ExecuteQuery<Invoice>();
+            }
+            sales_text.Text = invoices.Count.ToString();
+            int sum = invoices.Sum(invoice => int.Parse(invoice.Total));
+            amount_text.Text = sum.ToString();
         }
 
         private void billScreenButtonEvent(Object Sender, RoutedEventArgs e)
@@ -62,6 +75,12 @@ namespace HelloWPF
         private void invoiceScreenButtonEvent(Object Sender, RoutedEventArgs e)
         {
             MainWindowControl.Content = new InvoiceControl(MainWindowControl);
+        }
+
+        private void quitEvent(Object Sender, RoutedEventArgs e)
+        {
+            Window window = Window.GetWindow(this);
+            window.Close();
         }
     }
 }
