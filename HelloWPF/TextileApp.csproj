@@ -4,7 +4,7 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UseWPF>true</UseWPF>
-    <ApplicationIcon>hnet.com-image.ico</ApplicationIcon>
+    <ApplicationIcon>WhatsApp Image 2020-11-08 at 17.26.08.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>

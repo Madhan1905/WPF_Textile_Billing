@@ -69,7 +69,7 @@ namespace HelloWPF {
                 return;
             }
             _contentLoaded = true;
-            System.Uri resourceLocater = new System.Uri("/TextileApp;component/invoicecontrol.xaml", System.UriKind.Relative);
+            System.Uri resourceLocater = new System.Uri("/TextileApp;V1.0.0.0;component/invoicecontrol.xaml", System.UriKind.Relative);
             
             #line 1 "..\..\..\InvoiceControl.xaml"
             System.Windows.Application.LoadComponent(this, resourceLocater);

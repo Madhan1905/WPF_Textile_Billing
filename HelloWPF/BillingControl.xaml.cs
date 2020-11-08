@@ -191,8 +191,23 @@ namespace HelloWPF
                     break;
                 case MessageBoxResult.No: break;
             }
-            MainWindowControl.Content = new HomeControl(MainWindowControl);
-        }
+
+            using (SQLiteConnection dbConnection = new SQLiteConnection(App.productDatabasePath))
+            {
+                try
+                {
+                    invoice = new Invoice() { Date = DateTime.Now.ToString("dd/M/yyyy") };
+                    App.currentInvoice = invoice;
+                    dbConnection.CreateTable<Invoice>();
+                    dbConnection.Insert(invoice);
+                    MainWindowControl.Content = new BillingControl(invoice, MainWindowControl);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+            }
+            MainWindowControl.Content = new BillingControl(App.currentInvoice, MainWindowControl);        }
 
         public bool exitBilling()
         {

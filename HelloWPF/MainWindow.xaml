@@ -24,7 +24,7 @@
                 <ColumnDefinition Width="0.3*"/>
                 <ColumnDefinition Width="0.05*"/>
             </Grid.ColumnDefinitions>
-            <TextBlock Text="Thinker's Hut | Help: 8870395228" FontWeight="Bold" Grid.Row="1" Margin="50,0,0,0" FontSize="20"/>
+            <TextBlock Text="Thinker's Hut | Help: 8870395228 | support@thinkershut.com" FontWeight="Bold" Grid.Row="1" Margin="50,0,0,0" FontSize="20"/>
             <Label Name="LiveTimerText" Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" HorizontalContentAlignment="Right" FontSize="20" VerticalContentAlignment="Center"/>
         </Grid>
     </Grid>
