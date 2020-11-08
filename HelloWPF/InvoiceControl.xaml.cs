@@ -53,6 +53,15 @@ namespace HelloWPF
             viewInvoice();
         }
 
+        private void printInvoiceEvent(Object Sender, RoutedEventArgs e)
+        {
+            Invoice invoice = invoiceTable.SelectedItem as Invoice;
+            if (invoice != null)
+            {
+                App.printBill(invoice);
+            }
+        }
+
         private void deleteInvoiceEvent(Object Sender, RoutedEventArgs e)
         {
             deleteInvoice();

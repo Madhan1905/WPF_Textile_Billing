@@ -36,6 +36,7 @@ namespace HelloWPF
                 invoices = sql_cmd.ExecuteQuery<Invoice>();
             }
             sales_text.Text = invoices.Count.ToString();
+            invoices = invoices.FindAll(invoice => invoice.Total != null);
             int sum = invoices.Sum(invoice => int.Parse(invoice.Total));
             amount_text.Text = sum.ToString();
         }

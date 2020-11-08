@@ -77,10 +77,10 @@ namespace HelloWPF
                             {
                                 product.Barcode = el.Text;
                                 product.Name = queryProducts[0].Name;
-                                product.SellingPrice = int.Parse(queryProducts[0].SellingPrice);
+                                product.PrintName = queryProducts[0].PrintName;
                                 product.MRP = int.Parse(queryProducts[0].MRP);
                                 product.Quantity = 1;
-                                product.Total = int.Parse(queryProducts[0].SellingPrice);
+                                product.Total = int.Parse(queryProducts[0].MRP);
                                 product.Serial = products.IndexOf(product)+1;
 
                                 int sum = products.Sum(product => product.Total);
@@ -112,7 +112,7 @@ namespace HelloWPF
                     {
                         BillingProduct product = (BillingProduct)billTable.SelectedItem;
                         product.Quantity = int.Parse(el.Text);
-                        product.Total = product.Quantity * product.SellingPrice;
+                        product.Total = product.Quantity * product.MRP;
 
                         int sum = products.Sum(product => product.Total);
                         grandTotalText.Text = formatTotal(sum);
@@ -156,14 +156,16 @@ namespace HelloWPF
 
         private void saveInvoiceEvent(Object sender, RoutedEventArgs e)
         {
-            MessageBoxResult result = MessageBox.Show("Do you want to print?", "Confirmation", MessageBoxButton.YesNo);
-            switch (result)
-            {
-                case MessageBoxResult.Yes:
-                    printBill();
-                    break;
-                case MessageBoxResult.No:break;
-            }
+            saveInvoice();
+        }
+
+        private void exitBillingEvent(Object sender, RoutedEventArgs e)
+        {
+            exitBilling();
+        }
+
+        private void saveInvoice()
+        {
             invoice.Total = grandTotalText.Text;
             invoice.BillingProducts = JsonSerializer.Serialize<List<BillingProduct>>(products);
 
@@ -179,100 +181,17 @@ namespace HelloWPF
                 {
                     Console.WriteLine(ex.Message);
                 }
-                finally
-                {
-                    MainWindowControl.Content = new HomeControl(MainWindowControl);
-                }
             }
-        }
 
-        private void printBill()
-        {
-            FlowDocument flowDocument = new FlowDocument();
-            Table table = new Table();
-            TableRowGroup rowGroup = new TableRowGroup();
-            table.RowGroups.Add(rowGroup);
-            TableRow row = new TableRow();
-            rowGroup.Rows.Add(row);
-
-            Paragraph paragraph = new Paragraph(new Run("Product"));
-            paragraph.FontFamily = new FontFamily("Futura Medium");
-            TableCell tableCell = new TableCell(paragraph);
-            tableCell.Padding = new Thickness(2);
-            tableCell.TextAlignment = TextAlignment.Center;
-            row.Cells.Add(tableCell);
-
-            paragraph = new Paragraph(new Run("Qty."));
-            paragraph.FontFamily = new FontFamily("Futura Medium");
-            tableCell = new TableCell(paragraph);
-            tableCell.Padding = new Thickness(2);
-            tableCell.TextAlignment = TextAlignment.Center;
-            row.Cells.Add(tableCell);
-
-            paragraph = new Paragraph(new Run("Price"));
-            paragraph.FontFamily = new FontFamily("Futura Medium");
-            tableCell = new TableCell(paragraph);
-            tableCell.Padding = new Thickness(2);
-            tableCell.TextAlignment = TextAlignment.Center;
-            row.Cells.Add(tableCell);
-
-            paragraph = new Paragraph(new Run("Total"));
-            paragraph.FontFamily = new FontFamily("Futura Medium");
-            tableCell = new TableCell(paragraph);
-            tableCell.Padding = new Thickness(2);
-            tableCell.TextAlignment = TextAlignment.Center;
-            row.Cells.Add(tableCell);
-
-            String productString = App.currentInvoice.BillingProducts;
-            List<BillingProduct> products = JsonSerializer.Deserialize<List<BillingProduct>>(App.currentInvoice.BillingProducts);
-            foreach (BillingProduct product in products)
+            MessageBoxResult result = MessageBox.Show("Do you want to print?", "Confirmation", MessageBoxButton.YesNo);
+            switch (result)
             {
-                row = new TableRow();
-                rowGroup.Rows.Add(row);
-
-                paragraph = new Paragraph(new Run(product.Name));
-                paragraph.FontFamily = new FontFamily("Futura Medium");
-                tableCell = new TableCell(paragraph);
-                tableCell.Padding = new Thickness(2);
-                tableCell.TextAlignment = TextAlignment.Center;
-                row.Cells.Add(tableCell);
-
-                paragraph = new Paragraph(new Run(product.Quantity.ToString()));
-                paragraph.FontFamily = new FontFamily("Futura Medium");
-                tableCell = new TableCell(paragraph);
-                tableCell.Padding = new Thickness(2);
-                tableCell.TextAlignment = TextAlignment.Center;
-                row.Cells.Add(tableCell);
-
-                paragraph = new Paragraph(new Run(product.SellingPrice.ToString()));
-                paragraph.FontFamily = new FontFamily("Futura Medium");
-                tableCell = new TableCell(paragraph);
-                tableCell.Padding = new Thickness(2);
-                tableCell.TextAlignment = TextAlignment.Center;
-                row.Cells.Add(tableCell);
-
-                paragraph = new Paragraph(new Run(product.Total.ToString()));
-                paragraph.FontFamily = new FontFamily("Futura Medium");
-                tableCell = new TableCell(paragraph);
-                tableCell.Padding = new Thickness(2);
-                tableCell.TextAlignment = TextAlignment.Center;
-                row.Cells.Add(tableCell);
+                case MessageBoxResult.Yes:
+                    App.printBill(invoice);
+                    break;
+                case MessageBoxResult.No: break;
             }
-
-            flowDocument.Blocks.Add(table);
-
-            PrintDialog dialog = new PrintDialog();
-            bool result = (bool)dialog.ShowDialog();
-            if (result)
-            {
-                IDocumentPaginatorSource idpSource = flowDocument;
-                dialog.PrintDocument(idpSource.DocumentPaginator, "Bill");
-            }
-        }
-
-        private void exitBillingEvent(Object sender, RoutedEventArgs e)
-        {
-            exitBilling();
+            MainWindowControl.Content = new HomeControl(MainWindowControl);
         }
 
         public bool exitBilling()
@@ -326,6 +245,10 @@ namespace HelloWPF
                         totalItemsText.Text = "Total Items:" + products.Count.ToString();
                         billTable.Items.Refresh();
                         break;
+                }
+                if (e.Key == Key.S && Keyboard.Modifiers == ModifierKeys.Control)
+                {
+                    saveInvoice();
                 }
             }
         }

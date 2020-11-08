@@ -62,7 +62,7 @@
                     <TextBlock Grid.Row="1" Text="Delete Bill" FontSize="12"/>
                 </Grid>
             </Button>
-            <Button Grid.Row="1" Grid.Column="4" Background="White">
+            <Button Grid.Row="1" Grid.Column="4" Background="White" Click="printInvoiceEvent">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition/>
@@ -82,13 +82,6 @@
             </Grid>
         </Grid>
         <DataGrid Name="invoiceTable" AutoGenerateColumns="False" CanUserAddRows="False" Grid.Row="1" Grid.Column="1" PreviewKeyDown="dataGridKeyEvent">
-            <DataGrid.RowHeaderTemplate>
-                <DataTemplate>
-                    <TextBlock Text="{Binding RelativeSource={RelativeSource Mode=FindAncestor, 
-                                      AncestorType={x:Type DataGridRow}}, 
-                                      Path=Item.Serial}"/>
-                </DataTemplate>
-            </DataGrid.RowHeaderTemplate>
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Bill No." Binding="{Binding Number}" Width="0.3*" IsReadOnly="True"/>
                 <DataGridTextColumn Header="Bill Date" Binding="{Binding Date}" Width="0.3*" IsReadOnly="True"/>
