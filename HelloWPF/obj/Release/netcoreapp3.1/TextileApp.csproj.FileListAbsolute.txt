@@ -46,3 +46,6 @@ F:\Madhan\Workspaces\C#\HelloWPF\HelloWPF\obj\Release\netcoreapp3.1\TextileApp.d
 F:\Madhan\Workspaces\C#\HelloWPF\HelloWPF\obj\Release\netcoreapp3.1\TextileApp.pdb
 F:\Madhan\Workspaces\C#\HelloWPF\HelloWPF\obj\Release\netcoreapp3.1\TextileApp.genruntimeconfig.cache
 F:\Madhan\Workspaces\C#\HelloWPF\HelloWPF\obj\Release\netcoreapp3.1\TextileApp.csprojAssemblyReference.cache
+F:\Madhan\Workspaces\C#\HelloWPF\HelloWPF\bin\Release\netcoreapp3.1\Resources\secure.enc
+F:\Madhan\Workspaces\C#\HelloWPF\HelloWPF\obj\Release\netcoreapp3.1\PasswordPopup.g.cs
+F:\Madhan\Workspaces\C#\HelloWPF\HelloWPF\obj\Release\netcoreapp3.1\PasswordPopup.baml

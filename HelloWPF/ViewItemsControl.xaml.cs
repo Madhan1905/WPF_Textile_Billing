@@ -1,6 +1,8 @@
 ﻿using HelloWPF.Classes;
 using SQLite;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -19,6 +21,19 @@ namespace HelloWPF
         {
             InitializeComponent();
             populateTable();
+
+            List<Invoice> invoices = new List<Invoice>();
+            using (SQLiteConnection dbConnection = new SQLiteConnection(App.productDatabasePath))
+            {
+                dbConnection.CreateTable<Invoice>();
+                invoices = dbConnection.Table<Invoice>().ToList();
+                var sql_cmd = dbConnection.CreateCommand("SELECT * FROM 'Invoice' WHERE Date=='" + DateTime.Now.ToString("dd/M/yyyy") + "'");
+                invoices = sql_cmd.ExecuteQuery<Invoice>();
+            }
+            sales_text.Text = invoices.Count.ToString();
+            invoices = invoices.FindAll(invoice => invoice.Total != null);
+            int sum = invoices.Sum(invoice => int.Parse(invoice.Total));
+            amount_text.Text = sum.ToString();
         }
 
         private void populateTable()

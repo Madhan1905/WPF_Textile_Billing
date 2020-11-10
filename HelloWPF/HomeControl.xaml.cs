@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using TextileApp;
 
 namespace HelloWPF
 {
@@ -26,19 +27,6 @@ namespace HelloWPF
         {
             InitializeComponent();
             MainWindowControl = WindowControl;
-
-            List<Invoice> invoices = new List<Invoice>();
-            using (SQLiteConnection dbConnection = new SQLiteConnection(App.productDatabasePath))
-            {
-                dbConnection.CreateTable<Invoice>();
-                invoices = dbConnection.Table<Invoice>().ToList();
-                var sql_cmd = dbConnection.CreateCommand("SELECT * FROM 'Invoice' WHERE Date=='" + DateTime.Now.ToString("dd/M/yyyy") + "'");
-                invoices = sql_cmd.ExecuteQuery<Invoice>();
-            }
-            sales_text.Text = invoices.Count.ToString();
-            invoices = invoices.FindAll(invoice => invoice.Total != null);
-            int sum = invoices.Sum(invoice => int.Parse(invoice.Total));
-            amount_text.Text = sum.ToString();
         }
 
         private void billScreenButtonEvent(Object Sender, RoutedEventArgs e)
@@ -55,8 +43,7 @@ namespace HelloWPF
                     {
                         invoice = new Invoice() { Date = DateTime.Now.ToString("dd/M/yyyy") };
                         App.currentInvoice = invoice;
-                        dbConnection.CreateTable<Invoice>();
-                        dbConnection.Insert(invoice);
+                        invoice.Number = dbConnection.Table<Product>().Count() + 1;
                     }
                     MainWindowControl.Content = new BillingControl(invoice, MainWindowControl);
                 }
@@ -68,9 +55,10 @@ namespace HelloWPF
             MainWindowControl.Content = new BillingControl(App.currentInvoice, MainWindowControl);
         }
 
-        private void itemScreenButtonEvent(Object Sender, RoutedEventArgs e)
+        private void adminScreenButtonEvent(Object Sender, RoutedEventArgs e)
         {
-            MainWindowControl.Content = new ViewItemsControl();
+            PasswordPopup popup = new PasswordPopup(MainWindowControl);
+            popup.ShowDialog();
         }
 
         private void invoiceScreenButtonEvent(Object Sender, RoutedEventArgs e)
@@ -81,7 +69,8 @@ namespace HelloWPF
         private void quitEvent(Object Sender, RoutedEventArgs e)
         {
             Window window = Window.GetWindow(this);
-            window.Close();
+            MainWindow mainWindow = (MainWindow)window;
+            mainWindow.closePrompt(null);
         }
     }
 }

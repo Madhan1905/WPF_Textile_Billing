@@ -109,9 +109,6 @@ namespace HelloWPF
             {
                 switch (e.Key)
                 {
-                    case Key.Delete:
-                        deleteInvoice();
-                        break;
                     case Key.Enter:
                         viewInvoice();
                         break;

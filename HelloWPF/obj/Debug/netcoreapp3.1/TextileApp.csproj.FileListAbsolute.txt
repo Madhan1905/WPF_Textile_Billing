@@ -21,12 +21,12 @@ F:\Madhan\Workspaces\C#\HelloWPF\HelloWPF\bin\Debug\netcoreapp3.1\runtimes\win-a
 F:\Madhan\Workspaces\C#\HelloWPF\HelloWPF\bin\Debug\netcoreapp3.1\runtimes\win-arm64\native\e_sqlite3.dll
 F:\Madhan\Workspaces\C#\HelloWPF\HelloWPF\bin\Debug\netcoreapp3.1\runtimes\win-x64\native\e_sqlite3.dll
 F:\Madhan\Workspaces\C#\HelloWPF\HelloWPF\bin\Debug\netcoreapp3.1\runtimes\win-x86\native\e_sqlite3.dll
-F:\Madhan\Workspaces\C#\HelloWPF\HelloWPF\obj\Debug\netcoreapp3.1\TextileApp.csprojAssemblyReference.cache
 F:\Madhan\Workspaces\C#\HelloWPF\HelloWPF\obj\Debug\netcoreapp3.1\AddProductWindow.g.cs
 F:\Madhan\Workspaces\C#\HelloWPF\HelloWPF\obj\Debug\netcoreapp3.1\BillingControl.g.cs
 F:\Madhan\Workspaces\C#\HelloWPF\HelloWPF\obj\Debug\netcoreapp3.1\HomeControl.g.cs
 F:\Madhan\Workspaces\C#\HelloWPF\HelloWPF\obj\Debug\netcoreapp3.1\InvoiceControl.g.cs
 F:\Madhan\Workspaces\C#\HelloWPF\HelloWPF\obj\Debug\netcoreapp3.1\MainWindow.g.cs
+F:\Madhan\Workspaces\C#\HelloWPF\HelloWPF\obj\Debug\netcoreapp3.1\PasswordPopup.g.cs
 F:\Madhan\Workspaces\C#\HelloWPF\HelloWPF\obj\Debug\netcoreapp3.1\ViewItemsControl.g.cs
 F:\Madhan\Workspaces\C#\HelloWPF\HelloWPF\obj\Debug\netcoreapp3.1\App.g.cs
 F:\Madhan\Workspaces\C#\HelloWPF\HelloWPF\obj\Debug\netcoreapp3.1\TextileApp_MarkupCompile.cache
@@ -37,6 +37,7 @@ F:\Madhan\Workspaces\C#\HelloWPF\HelloWPF\obj\Debug\netcoreapp3.1\Dictionary1.ba
 F:\Madhan\Workspaces\C#\HelloWPF\HelloWPF\obj\Debug\netcoreapp3.1\HomeControl.baml
 F:\Madhan\Workspaces\C#\HelloWPF\HelloWPF\obj\Debug\netcoreapp3.1\InvoiceControl.baml
 F:\Madhan\Workspaces\C#\HelloWPF\HelloWPF\obj\Debug\netcoreapp3.1\MainWindow.baml
+F:\Madhan\Workspaces\C#\HelloWPF\HelloWPF\obj\Debug\netcoreapp3.1\PasswordPopup.baml
 F:\Madhan\Workspaces\C#\HelloWPF\HelloWPF\obj\Debug\netcoreapp3.1\ViewItemsControl.baml
 F:\Madhan\Workspaces\C#\HelloWPF\HelloWPF\obj\Debug\netcoreapp3.1\TextileApp.g.resources
 F:\Madhan\Workspaces\C#\HelloWPF\HelloWPF\obj\Debug\netcoreapp3.1\TextileApp.AssemblyInfoInputs.cache
@@ -46,3 +47,5 @@ F:\Madhan\Workspaces\C#\HelloWPF\HelloWPF\obj\Debug\netcoreapp3.1\TextileApp.csp
 F:\Madhan\Workspaces\C#\HelloWPF\HelloWPF\obj\Debug\netcoreapp3.1\TextileApp.dll
 F:\Madhan\Workspaces\C#\HelloWPF\HelloWPF\obj\Debug\netcoreapp3.1\TextileApp.pdb
 F:\Madhan\Workspaces\C#\HelloWPF\HelloWPF\obj\Debug\netcoreapp3.1\TextileApp.genruntimeconfig.cache
+F:\Madhan\Workspaces\C#\HelloWPF\HelloWPF\obj\Debug\netcoreapp3.1\TextileApp.csprojAssemblyReference.cache
+F:\Madhan\Workspaces\C#\HelloWPF\HelloWPF\bin\Debug\netcoreapp3.1\Resources\secure.enc

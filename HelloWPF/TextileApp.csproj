@@ -4,7 +4,7 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UseWPF>true</UseWPF>
-    <ApplicationIcon>WhatsApp Image 2020-11-08 at 17.26.08.ico</ApplicationIcon>
+    <ApplicationIcon>boys_world_jpg_8M5_icon.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -19,6 +19,7 @@
     <None Remove="Images\print.png" />
     <None Remove="Images\remove_invoice.png" />
     <None Remove="Images\view_invoice.png" />
+    <None Remove="Resources\secure.enc" />
   </ItemGroup>
 
   <ItemGroup>
@@ -55,6 +56,9 @@
     <Resource Include="Images\view_invoice.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
+    <EmbeddedResource Include="Resources\secure.enc">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
   </ItemGroup>
 
   <ItemGroup>
