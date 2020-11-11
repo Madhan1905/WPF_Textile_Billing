@@ -22,17 +22,21 @@ namespace HelloWPF
     {
         private Invoice invoice;
         private ContentControl MainWindowControl;
-        private bool editMode = false;
         private List<BillingProduct> products;
-        public BillingControl(Invoice invoice, ContentControl WindowControl)
+        private bool editing;
+        public BillingControl(Invoice invoice, ContentControl WindowControl,bool editBill)
         {
             InitializeComponent();
+            editing = editBill;
 
             this.invoice = invoice;
             this.MainWindowControl = WindowControl;
 
             dateTextBox.Text = DateTime.Now.ToString("dd/M/yyyy");
-            invoiceTextBox.Text = invoice.Number.ToString();
+            using (SQLiteConnection dbConnection = new SQLiteConnection(App.productDatabasePath))
+            {
+                invoiceTextBox.Text = (dbConnection.Table<Invoice>().Count()+1).ToString();
+            }
 
             billTable.CellEditEnding += billTableCellEditEvent;
             billTable.PreviewTextInput += NumberValidationEvent;
@@ -40,14 +44,20 @@ namespace HelloWPF
             if (invoice.BillingProducts != null)
             {
                 products = JsonSerializer.Deserialize<List<BillingProduct>>(invoice.BillingProducts);
-                editMode = true;
             } else
             {
                 products = new List<BillingProduct>();
             }
+
+            if (invoice.Discount != null)
+            {
+                discountText.Text = invoice.Discount;
+            }
+
             int sum = products.Sum(product => product.Total);
             totalItemsText.Text = "Total Items:" + products.Count.ToString();
-            grandTotalText.Text = formatTotal(sum);
+            int discount = discountText.Text == "" ? 0 : int.Parse(discountText.Text);
+            grandTotalText.Text = formatTotal(sum-discount);
             billTable.ItemsSource = products;
         }
 
@@ -69,7 +79,7 @@ namespace HelloWPF
                         var el = e.EditingElement as TextBox;
                         if (!el.Text.Equals(""))
                         {
-                            var sql_cmd = dbConnection.CreateCommand("SELECT * FROM 'Product' WHERE Barcode==" + el.Text);
+                            var sql_cmd = dbConnection.CreateCommand("SELECT * FROM 'Product' WHERE Barcode=='" + el.Text +"'");
                             List<Product> queryProducts = sql_cmd.ExecuteQuery<Product>();
 
                             BillingProduct product = (BillingProduct)billTable.SelectedItem;
@@ -86,16 +96,21 @@ namespace HelloWPF
                                                                             MessageBoxButton.YesNo, MessageBoxImage.Question);
                                     if(result == MessageBoxResult.Yes)
                                     {
-                                        addProduct(product, queryProducts, el);
-                                    } else
-                                    {
                                         BillingProduct billingProduct = products.Find(prod => prod.Barcode == el.Text);
-                                        billingProduct.Quantity = billingProduct.Quantity+1;
+                                        billingProduct.Quantity = billingProduct.Quantity + 1;
                                         billingProduct.Total = int.Parse(queryProducts[0].MRP) * billingProduct.Quantity;
 
+                                        int discount = discountText.Text == "" ? 0 : int.Parse(discountText.Text);
                                         int sum = products.Sum(product => product.Total);
-                                        grandTotalText.Text = formatTotal(sum);
+                                        grandTotalText.Text = formatTotal(sum-discount);
 
+                                        billTable.CellEditEnding -= billTableCellEditEvent;
+                                        billTable.CancelEdit();
+                                        billTable.CancelEdit();
+                                        billTable.Items.Refresh();
+                                        billTable.CellEditEnding += billTableCellEditEvent;
+                                    } else
+                                    {
                                         billTable.CellEditEnding -= billTableCellEditEvent;
                                         billTable.CancelEdit();
                                         billTable.CancelEdit();
@@ -135,7 +150,11 @@ namespace HelloWPF
                         product.Total = product.Quantity * product.MRP;
 
                         int sum = products.Sum(product => product.Total);
-                        grandTotalText.Text = formatTotal(sum);
+                        int discount = discountText.Text == "" ? 0 : int.Parse(discountText.Text);
+                        grandTotalText.Text = formatTotal(sum-discount);
+
+                        int total = products.Sum(product => product.Quantity);
+                        totalItemsText.Text = "Total Items:" + total.ToString();
 
                         billTable.CellEditEnding -= billTableCellEditEvent;
                         billTable.CommitEdit();
@@ -165,9 +184,11 @@ namespace HelloWPF
             product.Serial = products.IndexOf(product) + 1;
 
             int sum = products.Sum(product => product.Total);
-            grandTotalText.Text = formatTotal(sum);
+            int discount = discountText.Text == "" ? 0 : int.Parse(discountText.Text);
+            grandTotalText.Text = formatTotal(sum-discount);
             invoice.BillingProducts = JsonSerializer.Serialize<List<BillingProduct>>(products);
-            totalItemsText.Text = "Total Items:" + products.Count.ToString();
+            int total = products.Sum(product => product.Quantity);
+            totalItemsText.Text = "Total Items:" + total.ToString();
 
             billTable.CellEditEnding -= billTableCellEditEvent;
             billTable.CommitEdit();
@@ -210,9 +231,10 @@ namespace HelloWPF
         {
             if(products.Count() > 0 && products[0].Barcode != null)
             {
-                invoice.Total = grandTotalText.Text;
                 invoice.Time = DateTime.Now.ToString("hh:mm");
                 invoice.Discount = discountText.Text == "" ? "0" : discountText.Text;
+                int sum = products.Sum(product => product.Total);
+                invoice.Total = (sum - int.Parse(invoice.Discount)).ToString();
                 invoice.BillingProducts = JsonSerializer.Serialize<List<BillingProduct>>(products);
 
                 using (SQLiteConnection dbConnection = new SQLiteConnection(App.productDatabasePath))
@@ -220,7 +242,13 @@ namespace HelloWPF
                     try
                     {
                         dbConnection.CreateTable<Invoice>();
-                        dbConnection.Insert(invoice);
+                        if (editing)
+                        {
+                            dbConnection.Update(invoice);
+                        } else
+                        {
+                            dbConnection.Insert(invoice);
+                        }
                         App.currentInvoice = null;
                     }
                     catch (Exception ex)
@@ -245,14 +273,14 @@ namespace HelloWPF
                         invoice = new Invoice() { Date = DateTime.Now.ToString("dd/M/yyyy") };
                         App.currentInvoice = invoice;
                         invoice.Number = dbConnection.Table<Product>().Count() + 1;
-                        MainWindowControl.Content = new BillingControl(invoice, MainWindowControl);
+                        MainWindowControl.Content = new BillingControl(invoice, MainWindowControl,false);
                     }
                     catch (Exception ex)
                     {
                         Console.WriteLine(ex.Message);
                     }
                 }
-                MainWindowControl.Content = new BillingControl(App.currentInvoice, MainWindowControl);
+                MainWindowControl.Content = new BillingControl(App.currentInvoice, MainWindowControl,false);
             }        
         }
 
@@ -262,25 +290,17 @@ namespace HelloWPF
             switch (result)
             {
                 case MessageBoxResult.Yes:
-                    using (SQLiteConnection dbConnection = new SQLiteConnection(App.productDatabasePath))
+                    try
                     {
-                        try
-                        {
-                            if (!editMode)
-                            {
-                                dbConnection.CreateTable<Invoice>();
-                                dbConnection.Delete(invoice);
-                            }
-                            App.currentInvoice = null;
-                        }
-                        catch (Exception ex)
-                        {
-                            Console.WriteLine(ex.Message);
-                        }
-                        finally
-                        {
-                            MainWindowControl.Content = new HomeControl(MainWindowControl);
-                        }
+                        App.currentInvoice = null;
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                    }
+                    finally
+                    {
+                        MainWindowControl.Content = new HomeControl(MainWindowControl);
                     }
                     return true;
                 case MessageBoxResult.No: return false;
@@ -301,10 +321,15 @@ namespace HelloWPF
                 {
                     case Key.Delete:
                         BillingProduct product = billTable.SelectedItem as BillingProduct;
-                        grandTotalText.Text = formatTotal(int.Parse(grandTotalText.Text) - product.Total);
+                        int sum = products.Sum(product => product.Total);
+                        int discount = discountText.Text == "" ? 0 : int.Parse(discountText.Text);
+                        grandTotalText.Text = formatTotal(sum - product.Total - discount);
                         products.Remove(product);
                         billTable.ItemsSource = products;
-                        totalItemsText.Text = "Total Items:" + products.Count.ToString();
+
+                        int total = products.Sum(product => product.Quantity);
+                        totalItemsText.Text = "Total Items:" + total.ToString();
+                        invoice.BillingProducts = JsonSerializer.Serialize<List<BillingProduct>>(products);
                         billTable.Items.Refresh();
                         break;
                 }

@@ -73,7 +73,7 @@ namespace HelloWPF
             if (invoice != null)
             {
                 App.currentInvoice = invoice;
-                MainWindowControl.Content = new BillingControl(invoice, MainWindowControl);
+                MainWindowControl.Content = new BillingControl(invoice, MainWindowControl,true);
             }
         }
 

@@ -2,6 +2,7 @@
 using SQLite;
 using System;
 using System.ComponentModel;
+using System.IO;
 using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -16,9 +17,25 @@ namespace HelloWPF
         public MainWindow()
         {
             InitializeComponent();
-            MainWindowControl.Content = new HomeControl(MainWindowControl);
-            Closing += MainWindow_Closing;
 
+            if (App.validateLicenseFile(App.licensePath))
+            {
+                this.WindowState = WindowState.Maximized;
+                footer_grid.Visibility = Visibility.Visible;
+                MainWindowControl.Content = new HomeControl(MainWindowControl);
+            } else
+            {
+                var sysHeight = System.Windows.SystemParameters.PrimaryScreenHeight;
+                var sysWidth = System.Windows.SystemParameters.PrimaryScreenWidth;
+                this.Height = (sysHeight * 0.25);
+                this.Width = (sysWidth * 0.3);
+                this.Left = sysWidth * 0.5 - this.Width * 0.5;
+                this.Top = sysHeight * 0.5 - this.Height * 0.5;
+
+                MainWindowControl.Content = new LicenseControl(this,MainWindowControl,footer_grid);
+            }
+
+            Closing += MainWindow_Closing;
             DispatcherTimer timer = new DispatcherTimer();
             timer.Interval = TimeSpan.FromSeconds(1);
             timer.Tick += timer_tick;
@@ -43,16 +60,15 @@ namespace HelloWPF
                             {
                                 invoice = new Invoice() { Date = DateTime.Now.ToString("dd/M/yyyy") };
                                 App.currentInvoice = invoice;
-                                invoice.Number = dbConnection.Table<Product>().Count()+1;
                             }
-                            MainWindowControl.Content = new BillingControl(invoice, MainWindowControl);
+                            MainWindowControl.Content = new BillingControl(invoice, MainWindowControl,false);
                         }
                         catch (Exception ex)
                         {
                             Console.WriteLine(ex.Message);
                         }
                     }
-                    MainWindowControl.Content = new BillingControl(App.currentInvoice, MainWindowControl);
+                    MainWindowControl.Content = new BillingControl(App.currentInvoice, MainWindowControl,false);
                     break;
 
                 case Key.F3:

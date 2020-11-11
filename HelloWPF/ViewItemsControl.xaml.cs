@@ -17,10 +17,17 @@ namespace HelloWPF
     /// </summary>
     public partial class ViewItemsControl : UserControl
     {
+        List<Product> products;
         public ViewItemsControl()
         {
             InitializeComponent();
-            populateTable();
+
+            using (SQLiteConnection dbConnection = new SQLiteConnection(App.productDatabasePath))
+            {
+                dbConnection.CreateTable<Product>();
+                products = dbConnection.Table<Product>().ToList();
+            }
+            populateTable(products);
 
             List<Invoice> invoices = new List<Invoice>();
             using (SQLiteConnection dbConnection = new SQLiteConnection(App.productDatabasePath))
@@ -36,36 +43,31 @@ namespace HelloWPF
             amount_text.Text = sum.ToString();
         }
 
-        private void populateTable()
+        private void populateTable(List<Product> products)
         {
-            using (SQLiteConnection dbConnection = new SQLiteConnection(App.productDatabasePath))
+            if (itemsTable.RowGroups.Count > 1)
             {
-                dbConnection.CreateTable<Product>();
-                var products = dbConnection.Table<Product>().ToList();
-                if(itemsTable.RowGroups.Count > 1)
+                itemsTable.RowGroups.Remove(itemsTable.RowGroups[1]);
+            }
+            itemsTable.RowGroups.Add(new TableRowGroup());
+            int rowIndex = 0;
+            foreach (Product product in products)
+            {
+                itemsTable.RowGroups[1].Rows.Add(new TableRow());
+                TableRow newRow = itemsTable.RowGroups[1].Rows[rowIndex];
+                if (rowIndex % 2 == 0)
                 {
-                    itemsTable.RowGroups.Remove(itemsTable.RowGroups[1]);
+                    newRow.Background = Brushes.LightSteelBlue;
                 }
-                itemsTable.RowGroups.Add(new TableRowGroup());
-                int rowIndex = 0;
-                foreach (Product product in products)
-                {
-                    itemsTable.RowGroups[1].Rows.Add(new TableRow());
-                    TableRow newRow = itemsTable.RowGroups[1].Rows[rowIndex];
-                    if (rowIndex % 2 == 0)
-                    {
-                        newRow.Background = Brushes.LightSteelBlue;
-                    }
-                    createTableIconCell(newRow,rowIndex,"edit", product);
-                    createTableIconCell(newRow, rowIndex, "delete", product);
-                    creatTableCell((rowIndex+1).ToString(), newRow, true, true);
-                    creatTableCell(product.Barcode, newRow, true, true);
-                    creatTableCell(product.Name, newRow, true, false);
-                    creatTableCell(product.PrintName, newRow, true, true);
-                    creatTableCell(product.Cost, newRow, true, true);
-                    creatTableCell(product.MRP, newRow, false, true);
-                    rowIndex++;
-                }
+                createTableIconCell(newRow, rowIndex, "edit", product);
+                createTableIconCell(newRow, rowIndex, "delete", product);
+                creatTableCell((rowIndex + 1).ToString(), newRow, true, true);
+                creatTableCell(product.Barcode, newRow, true, true);
+                creatTableCell(product.Name, newRow, true, false);
+                creatTableCell(product.PrintName, newRow, true, true);
+                creatTableCell(product.Cost, newRow, true, true);
+                creatTableCell(product.MRP, newRow, false, true);
+                rowIndex++;
             }
         }
 
@@ -111,7 +113,8 @@ namespace HelloWPF
                     {
                         dbConnection.CreateTable<Product>();
                         dbConnection.Delete(product);
-                        populateTable();
+                        products = dbConnection.Table<Product>().ToList();
+                        populateTable(products);
                     }
                     break;
                 case MessageBoxResult.No: break;
@@ -125,7 +128,12 @@ namespace HelloWPF
             AddProductWindow addProductWindow = new AddProductWindow(product);
             addProductWindow.ShowDialog();
 
-            populateTable();
+            using (SQLiteConnection dbConnection = new SQLiteConnection(App.productDatabasePath))
+            {
+                dbConnection.CreateTable<Product>();
+                products = dbConnection.Table<Product>().ToList();
+            }
+            populateTable(products);
         }
 
         private void creatTableCell(string value, TableRow row, Boolean border, Boolean isCenter)
@@ -149,6 +157,32 @@ namespace HelloWPF
             row.Cells.Add(tableCell);
         }
 
+        private void search_event(Object sender, KeyEventArgs e)
+        {
+            if(e.Key == Key.Enter)
+            {
+                if(search_text.Text != "")
+                {
+                    using (SQLiteConnection dbConnection = new SQLiteConnection(App.productDatabasePath))
+                    {
+                        dbConnection.CreateTable<Product>();
+                        products = dbConnection.Table<Product>().ToList();
+                    }
+                    products = products.FindAll(prod => prod.Barcode == search_text.Text);
+                    populateTable(products);
+                }else
+                {
+                    using (SQLiteConnection dbConnection = new SQLiteConnection(App.productDatabasePath))
+                    {
+                        dbConnection.CreateTable<Product>();
+                        products = dbConnection.Table<Product>().ToList();
+                    }
+                    populateTable(products);
+                }
+                
+            }
+        }
+
         private void Add_Item(Object Sender, RoutedEventArgs e)
         {
             addData();
@@ -167,7 +201,12 @@ namespace HelloWPF
             AddProductWindow addProductWindow = new AddProductWindow(product);
             addProductWindow.ShowDialog();
 
-            populateTable();
+            using (SQLiteConnection dbConnection = new SQLiteConnection(App.productDatabasePath))
+            {
+                dbConnection.CreateTable<Product>();
+                products = dbConnection.Table<Product>().ToList();
+            }
+            populateTable(products);
         }
     }
 }

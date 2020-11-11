@@ -85,7 +85,6 @@
                 <DataGridTextColumn Header="Barcode" Binding="{Binding Barcode}" Width="0.2*"/>
                 <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="0.35*" IsReadOnly="True"/>
                 <DataGridTextColumn Header="Qty." Binding="{Binding Quantity}" Width="0.1*"/>
-                <DataGridTextColumn Header="Selling Price" Binding="{Binding SellingPrice}" Width="0.1*" IsReadOnly="True"/>
                 <DataGridTextColumn Header="MRP" Binding="{Binding MRP}" Width="0.1*" IsReadOnly="True"/>
                 <DataGridTextColumn Header="Total" Binding="{Binding Total}" Width="0.09*" IsReadOnly="True"/>
             </DataGrid.Columns>

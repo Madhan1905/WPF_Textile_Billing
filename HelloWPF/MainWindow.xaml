@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:HelloWPF"
         mc:Ignorable="d"
-        Title="Thinkershut" Height="450" Width="1000" WindowState="Maximized"
+        Title="Thinkershut"
         Icon="/Images/icon.png"
         KeyDown="keyEventHandler">
     <Grid>
@@ -14,7 +14,7 @@
             <RowDefinition Height="0.075*"/>
         </Grid.RowDefinitions>
         <ContentControl x:Name="MainWindowControl" Grid.Row="0" Content="home"/>
-        <Grid Background="LightSlateGray" Grid.Row="1">
+        <Grid Background="LightSlateGray" Grid.Row="1" Visibility="Collapsed" x:Name="footer_grid">
             <Grid.RowDefinitions>
                 <RowDefinition Height="0.35*"/>
                 <RowDefinition/>

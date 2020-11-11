@@ -43,16 +43,15 @@ namespace HelloWPF
                     {
                         invoice = new Invoice() { Date = DateTime.Now.ToString("dd/M/yyyy") };
                         App.currentInvoice = invoice;
-                        invoice.Number = dbConnection.Table<Product>().Count() + 1;
                     }
-                    MainWindowControl.Content = new BillingControl(invoice, MainWindowControl);
+                    MainWindowControl.Content = new BillingControl(invoice, MainWindowControl,false);
                 }
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex.Message);
                 }
             }
-            MainWindowControl.Content = new BillingControl(App.currentInvoice, MainWindowControl);
+            MainWindowControl.Content = new BillingControl(App.currentInvoice, MainWindowControl,false);
         }
 
         private void adminScreenButtonEvent(Object Sender, RoutedEventArgs e)

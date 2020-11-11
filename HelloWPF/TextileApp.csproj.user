@@ -21,6 +21,12 @@
     <Compile Update="InvoiceControl.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="LicenseControl.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="LicensePopup.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="PasswordPopup.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -42,6 +48,12 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="InvoiceControl.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="LicenseControl.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="LicensePopup.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="MainWindow.xaml">

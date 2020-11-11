@@ -5,12 +5,17 @@ using System.Configuration;
 using System.Data;
 using System.IO;
 using System.Linq;
+using System.Net.NetworkInformation;
+using System.Reflection;
+using System.Security.Cryptography;
+using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Media;
+using TextileApp;
 
 namespace HelloWPF
 {
@@ -19,9 +24,57 @@ namespace HelloWPF
     /// </summary>
     public partial class App : Application
     {
-        static string folderPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-        public static string productDatabasePath = Path.Combine(folderPath, "Products.db");
+        public static string productDatabasePath = "D://Thinkershut//Products.db";
+        public static string licensePath = "D://Thinkershut//license.lic";
         public static Invoice currentInvoice = null;
+
+        public static bool validateLicenseFile(string filePath)
+        {
+            byte[] key = ASCIIEncoding.ASCII.GetBytes("KamehamehaX4".PadLeft(32));
+            byte[] iv = ASCIIEncoding.ASCII.GetBytes("KamehamehaX4".PadLeft(16));
+            //Create a file stream.
+            var assembly = Assembly.GetExecutingAssembly();
+            Directory.CreateDirectory("D://Thinkershut");
+            if (File.Exists(filePath))
+            {
+                try
+                {
+                    FileStream myStream = new FileStream(filePath, FileMode.Open);
+                    //Create a new instance of the default Aes implementation class
+                    Aes aes = Aes.Create();
+
+                    //Create a CryptoStream, pass it the file stream, and decrypt
+                    //it with the Aes class using the key and IV.
+                    CryptoStream cryptStream = new CryptoStream(
+                       myStream,
+                       aes.CreateDecryptor(key, iv),
+                       CryptoStreamMode.Read);
+
+                    //Read the stream.
+                    StreamReader sReader = new StreamReader(cryptStream);
+                    string macAddr = (
+                        from nic in NetworkInterface.GetAllNetworkInterfaces()
+                        where nic.OperationalStatus == OperationalStatus.Up
+                        select nic.GetPhysicalAddress().ToString()
+                    ).FirstOrDefault();
+
+                    string s = sReader.ReadToEnd().Replace("\r\n", "");
+                    //Close the streams.
+                    sReader.Close();
+
+                    return s.Equals(macAddr);
+                }
+                catch
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                return false;
+            }
+
+        }
 
         private void Application_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
         {
@@ -88,6 +141,17 @@ namespace HelloWPF
             flowDocument.Blocks.Add(table);
 
             table = new Table();
+            TableColumn column = new TableColumn();
+            column.Width = new GridLength(0.4,GridUnitType.Star);
+            table.Columns.Add(column);
+            column = new TableColumn();
+            column.Width = new GridLength(0.1, GridUnitType.Star);
+            table.Columns.Add(column); column = new TableColumn();
+            column.Width = new GridLength(0.2, GridUnitType.Star);
+            table.Columns.Add(column); column = new TableColumn();
+            column.Width = new GridLength(0.3, GridUnitType.Star);
+            table.Columns.Add(column);
+
             TableRowGroup rowGroup = new TableRowGroup();
             table.RowGroups.Add(rowGroup);
             TableRow row = new TableRow();
@@ -108,7 +172,7 @@ namespace HelloWPF
             paragraph.FontWeight = FontWeights.Bold;
             tableCell = new TableCell(paragraph);
             tableCell.Padding = new Thickness(2);
-            tableCell.TextAlignment = TextAlignment.Center;
+            tableCell.TextAlignment = TextAlignment.Right;
             row.Cells.Add(tableCell);
 
             paragraph = new Paragraph(new Run("Price"));
@@ -117,7 +181,7 @@ namespace HelloWPF
             paragraph.FontWeight = FontWeights.Bold;
             tableCell = new TableCell(paragraph);
             tableCell.Padding = new Thickness(2);
-            tableCell.TextAlignment = TextAlignment.Center;
+            tableCell.TextAlignment = TextAlignment.Right;
             row.Cells.Add(tableCell);
 
             paragraph = new Paragraph(new Run("Total"));
@@ -149,7 +213,7 @@ namespace HelloWPF
                 paragraph.FontSize = 11;
                 tableCell = new TableCell(paragraph);
                 tableCell.Padding = new Thickness(2);
-                tableCell.TextAlignment = TextAlignment.Center;
+                tableCell.TextAlignment = TextAlignment.Right;
                 row.Cells.Add(tableCell);
 
                 paragraph = new Paragraph(new Run(product.MRP.ToString()));
@@ -157,7 +221,7 @@ namespace HelloWPF
                 paragraph.FontSize = 11;
                 tableCell = new TableCell(paragraph);
                 tableCell.Padding = new Thickness(2);
-                tableCell.TextAlignment = TextAlignment.Center;
+                tableCell.TextAlignment = TextAlignment.Right;
                 row.Cells.Add(tableCell);
 
                 paragraph = new Paragraph(new Run(product.Total.ToString()));
@@ -177,7 +241,8 @@ namespace HelloWPF
             TableRow footerRow = new TableRow();
             footerRowGroup.Rows.Add(footerRow);
 
-            titleParagraph = new Paragraph(new Run("Total Items:"+products.Count()));
+            int total = products.Sum(product => product.Quantity);
+            titleParagraph = new Paragraph(new Run("Total Items:"+total.ToString()));
             titleParagraph.FontFamily = new FontFamily("Segoe UI");
             titleParagraph.FontSize = 11;
             TableCell footerTableCell = new TableCell(titleParagraph);
@@ -201,7 +266,7 @@ namespace HelloWPF
 
                 titleParagraph = new Paragraph(new Run((int.Parse(invoice.Total) + int.Parse(invoice.Discount)).ToString()));
                 titleParagraph.FontFamily = new FontFamily("Segoe UI");
-                titleParagraph.FontSize = 11;
+                titleParagraph.FontSize = 13;
                 titleParagraph.FontWeight = FontWeights.Bold;
                 footerTableCell = new TableCell(titleParagraph);
                 footerTableCell.Padding = new Thickness(2);
@@ -241,7 +306,7 @@ namespace HelloWPF
 
                 titleParagraph = new Paragraph(new Run(invoice.Total));
                 titleParagraph.FontFamily = new FontFamily("Segoe UI");
-                titleParagraph.FontSize = 11;
+                titleParagraph.FontSize = 13;
                 titleParagraph.FontWeight = FontWeights.Bold;
                 footerTableCell = new TableCell(titleParagraph);
                 footerTableCell.Padding = new Thickness(2);
@@ -263,7 +328,7 @@ namespace HelloWPF
 
                 titleParagraph = new Paragraph(new Run(invoice.Total));
                 titleParagraph.FontFamily = new FontFamily("Segoe UI");
-                titleParagraph.FontSize = 11;
+                titleParagraph.FontSize = 13;
                 titleParagraph.FontWeight = FontWeights.Bold;
                 footerTableCell = new TableCell(titleParagraph);
                 footerTableCell.Padding = new Thickness(2);
@@ -273,7 +338,7 @@ namespace HelloWPF
 
             flowDocument.Blocks.Add(table);
 
-            titleParagraph = new Paragraph(new Run("Thank you for shopping"));
+            titleParagraph = new Paragraph(new Run("Thank you for shopping with us!!!"));
             titleParagraph.FontFamily = new FontFamily("Segoe UI");
             titleParagraph.FontSize = 11;
             titleParagraph.TextAlignment = TextAlignment.Center;
@@ -286,7 +351,7 @@ namespace HelloWPF
             titleParagraph.Margin = new Thickness(0.0);
             flowDocument.Blocks.Add(titleParagraph);
 
-            flowDocument.MaxPageWidth = 250;
+            flowDocument.MaxPageWidth = 270;
             //fdr.Document = flowDocument;
             //wd.Content = fdr;
             //wd.Show();
