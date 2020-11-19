@@ -14,7 +14,7 @@
             <RowDefinition Height="0.075*"/>
         </Grid.RowDefinitions>
         <ContentControl x:Name="MainWindowControl" Grid.Row="0" Content="home"/>
-        <Grid Background="LightSlateGray" Grid.Row="1" Visibility="Collapsed" x:Name="footer_grid">
+        <Grid Background="LightSteelBlue" Grid.Row="1" Visibility="Collapsed" x:Name="footer_grid">
             <Grid.RowDefinitions>
                 <RowDefinition Height="0.35*"/>
                 <RowDefinition/>
@@ -24,8 +24,8 @@
                 <ColumnDefinition Width="0.3*"/>
                 <ColumnDefinition Width="0.05*"/>
             </Grid.ColumnDefinitions>
-            <TextBlock Text="Thinker's Hut | Help: 8870395228 | support@thinkers-hut.com" FontWeight="Bold" Grid.Row="1" Margin="50,0,0,0" FontSize="20" Foreground="LawnGreen"/>
-            <Label Name="LiveTimerText" Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" HorizontalContentAlignment="Right" FontSize="20" VerticalContentAlignment="Center"/>
+            <TextBlock Text="Thinker's Hut | Help: 8870395228 | support@thinkers-hut.com" FontWeight="Bold" Grid.Row="1" Margin="50,0,0,0" FontSize="20" Foreground="#012e7c"/>
+            <Label Name="LiveTimerText" Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" HorizontalContentAlignment="Right" Foreground="#012e7c" FontSize="20" VerticalContentAlignment="Center"/>
         </Grid>
     </Grid>
 </Window>

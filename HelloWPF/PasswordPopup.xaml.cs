@@ -32,10 +32,13 @@ namespace TextileApp
             this.Height = (sysHeight * 0.2);
             this.Width = (sysWidth * 0.3);
             this.Left = sysWidth * 0.5 - this.Width * 0.5;
-            this.Top = sysHeight * 0.5 - this.Height * 0.5;
+            this.Top = sysHeight * 0.5 - this.Height * 0.5; 
 
             login_button.Margin = new Thickness(0, sysWidth * 0.01,0, 0);
             login_button.Height = sysHeight * 0.035;
+
+            validatePasswordProgress.Margin = new Thickness(0, sysWidth * 0.01, 0, 0);
+            validatePasswordProgress.Height = sysHeight * 0.035;
 
             MainWindowControl = WindowControl;
             password_text.Focus();
@@ -58,6 +61,9 @@ namespace TextileApp
         {
             if(password_text.Password != "")
             {
+                login_button.Visibility = Visibility.Collapsed;
+                validatePasswordProgress.Visibility = Visibility.Visible;
+
                 byte[] key = ASCIIEncoding.ASCII.GetBytes("KamehamehaX4".PadLeft(32));
                 byte[] iv = ASCIIEncoding.ASCII.GetBytes("KamehamehaX4".PadLeft(16));
                 //Create a file stream.
@@ -81,8 +87,7 @@ namespace TextileApp
                 string s = sReader.ReadToEnd().Replace("\r\n","");
                 if (s.Equals(password_text.Password))
                 {
-                    Close();
-                    MainWindowControl.Content = new ViewItemsControl();
+                    MainWindowControl.Content = new ViewItemsControl(this);
                 }
                 //Close the streams.
                 sReader.Close();

@@ -1,14 +1,14 @@
-﻿using HelloWPF;
-using Microsoft.Win32;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net.NetworkInformation;
-using System.Reflection;
-using System.Security.Cryptography;
 using System.Text;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Shapes;
 
 namespace TextileApp
 {
@@ -20,93 +20,6 @@ namespace TextileApp
         public LicensePopup()
         {
             InitializeComponent();
-
-            var sysHeight = System.Windows.SystemParameters.PrimaryScreenHeight;
-            var sysWidth = System.Windows.SystemParameters.PrimaryScreenWidth;
-
-            upload_button.Margin = new Thickness(0, sysWidth * 0.01, 0, 0);
-            upload_button.Height = sysHeight * 0.035;
-            submit_button.Margin = new Thickness(0, sysWidth * 0.01, 0, 0);
-            submit_button.Height = sysHeight * 0.035;
-        }
-
-        private void uploadEvent(Object sender, RoutedEventArgs e)
-        {
-            OpenFileDialog dialog = new OpenFileDialog();
-            dialog.Filter = "License File (.lic)|*.lic";
-            if (dialog.ShowDialog() == true)
-            {
-                filePath_text.Text = dialog.FileName;
-                upload_button.Visibility = Visibility.Collapsed;
-                submit_button.Visibility = Visibility.Visible;
-            }
-        }
-
-        private void submitEvent(Object sender, RoutedEventArgs e)
-        {
-            if (App.validateLicenseFile(filePath_text.Text))
-            {
-                try
-                {
-                    //Create a file stream
-                    FileStream myStream = new FileStream(App.licensePath, FileMode.OpenOrCreate);
-
-                    //Create a new instance of the default Aes implementation class  
-                    // and encrypt the stream.  
-                    Aes aes = Aes.Create();
-
-                    byte[] key = ASCIIEncoding.ASCII.GetBytes("KamehamehaX4".PadLeft(32));
-                    byte[] iv = ASCIIEncoding.ASCII.GetBytes("KamehamehaX4".PadLeft(16));
-
-                    //Create a CryptoStream, pass it the FileStream, and encrypt
-                    //it with the Aes class.  
-                    aes.KeySize = 256;
-                    aes.BlockSize = 128;
-                    aes.Key = key;
-                    aes.IV = iv;
-                    ICryptoTransform encryptor = aes.CreateEncryptor(aes.Key, aes.IV);
-
-
-                    CryptoStream cryptStream = new CryptoStream(
-                        myStream,
-                        aes.CreateEncryptor(key, iv),
-                        CryptoStreamMode.Write);
-
-                    //Create a StreamWriter for easy writing to the
-                    //file stream.  
-                    StreamWriter sWriter = new StreamWriter(cryptStream);
-
-                    //Write to the stream.  
-                    string macAddr = (
-                        from nic in NetworkInterface.GetAllNetworkInterfaces()
-                        where nic.OperationalStatus == OperationalStatus.Up
-                        select nic.GetPhysicalAddress().ToString()
-                    ).FirstOrDefault();
-                    sWriter.WriteLine(macAddr);
-
-                    //Close all the connections.  
-                    sWriter.Close();
-                    cryptStream.Close();
-                    myStream.Close();
-
-                    MainWindow mainWindow = new MainWindow();
-                    mainWindow.Show();
-                }
-                catch
-                {
-                    //Inform the user that an exception was raised.  
-                    Console.WriteLine("The encryption failed.");
-                    Console.ReadKey();
-                    throw;
-                }
-
-            } else
-            {
-                error_text.Visibility = Visibility.Visible;
-                filePath_text.Text =  "";
-                submit_button.Visibility = Visibility.Collapsed;
-                upload_button.Visibility = Visibility.Visible;
-            }
         }
     }
 }

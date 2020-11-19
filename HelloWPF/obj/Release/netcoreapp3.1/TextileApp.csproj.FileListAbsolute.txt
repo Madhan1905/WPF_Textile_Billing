@@ -53,3 +53,7 @@ F:\Madhan\Workspaces\C#\HelloWPF\HelloWPF\obj\Release\netcoreapp3.1\LicenseContr
 F:\Madhan\Workspaces\C#\HelloWPF\HelloWPF\obj\Release\netcoreapp3.1\LicensePopup.g.cs
 F:\Madhan\Workspaces\C#\HelloWPF\HelloWPF\obj\Release\netcoreapp3.1\LicenseControl.baml
 F:\Madhan\Workspaces\C#\HelloWPF\HelloWPF\obj\Release\netcoreapp3.1\LicensePopup.baml
+F:\Madhan\Workspaces\C#\HelloWPF\HelloWPF\obj\Release\netcoreapp3.1\DashboardControl.g.cs
+F:\Madhan\Workspaces\C#\HelloWPF\HelloWPF\obj\Release\netcoreapp3.1\ItemsControl.g.cs
+F:\Madhan\Workspaces\C#\HelloWPF\HelloWPF\obj\Release\netcoreapp3.1\DashboardControl.baml
+F:\Madhan\Workspaces\C#\HelloWPF\HelloWPF\obj\Release\netcoreapp3.1\ItemsControl.baml

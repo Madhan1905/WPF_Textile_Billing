@@ -10,11 +10,11 @@ none
 false
 TRACE;DEBUG;NETCOREAPP;NETCOREAPP3_1
 F:\Madhan\Workspaces\C#\HelloWPF\HelloWPF\App.xaml
-10925281487
+12-867967961
 
-14-1221536851
+16860037209
 197397990378
-AddProductWindow.xaml;BillingControl.xaml;Dictionary1.xaml;HomeControl.xaml;InvoiceControl.xaml;LicenseControl.xaml;LicensePopup.xaml;MainWindow.xaml;PasswordPopup.xaml;ViewItemsControl.xaml;
+AddProductWindow.xaml;BillingControl.xaml;DashboardControl.xaml;Dictionary1.xaml;HomeControl.xaml;InvoiceControl.xaml;ItemsControl.xaml;LicenseControl.xaml;LicensePopup.xaml;MainWindow.xaml;PasswordPopup.xaml;ViewItemsControl.xaml;
 
 False
 

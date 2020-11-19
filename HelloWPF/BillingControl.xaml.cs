@@ -250,6 +250,15 @@ namespace HelloWPF
                             dbConnection.Insert(invoice);
                         }
                         App.currentInvoice = null;
+
+                        dbConnection.CreateTable<Product>();
+                        List<Product> existingProducts = dbConnection.Table<Product>().ToList();
+                        foreach(BillingProduct billingProduct in products)
+                        {
+                            Product product = existingProducts.Find(prod => prod.Barcode.Equals(billingProduct.Barcode));
+                            product.stock = product.stock - billingProduct.Quantity;
+                            dbConnection.Update(product);
+                        }
                     }
                     catch (Exception ex)
                     {

@@ -14,6 +14,7 @@ namespace HelloWPF.Classes
         public String SellingPrice { get; set; }
         public String Cost { get; set; }
         public String MRP { get; set; }
+        public long stock { get; set; }
 
     }
 }

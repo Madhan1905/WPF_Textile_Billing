@@ -6,20 +6,22 @@
              xmlns:local="clr-namespace:HelloWPF"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
+    <Grid Background="GhostWhite">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="0.2*"/>
-            <ColumnDefinition Width="0.8*"/>
+            <ColumnDefinition Width="0.1*"/>
+            <ColumnDefinition Width="0.6*"/>
+            <ColumnDefinition Width="0.1*"/>
         </Grid.ColumnDefinitions>
-        <Grid Grid.Column="0" Background="LightSteelBlue">
+        <Grid Grid.Column="0" Background="#012e7c">
             <Grid.Resources>
                 <Style TargetType="{x:Type Button}">
                     <Setter Property="Margin" Value="10,0"/>
                 </Style>
             </Grid.Resources>
             <Grid.RowDefinitions>
-                <RowDefinition Height="0.01*"/>
-                <RowDefinition Height="0.02*"/>
+                <RowDefinition Height="0.0*"/>
+                <RowDefinition Height="0.075*"/>
                 <RowDefinition Height="0.01*"/>
                 <RowDefinition Height="0.03*"/>
                 <RowDefinition Height="0.01*"/>
@@ -30,27 +32,28 @@
                 <RowDefinition Height="0.03*"/>
                 <RowDefinition Height="0.3*"/>
             </Grid.RowDefinitions>
-            <TextBlock Grid.Row="1" Grid.Column="1" Text="Quick Access" FontWeight="ExtraBold" FontSize="20" Background="White" Padding="10,0"/>
+            <Image Grid.Row="1" Grid.Column="1" Source="/Images/blue_abstract.jpg" Stretch="Fill"/>
             <Button 
-                Grid.Row="3" Grid.Column="1" Background="LightSteelBlue" BorderThickness="0" FontSize="20"
+                Grid.Row="3" Grid.Column="1" Background="FloralWhite" BorderThickness="0" FontSize="20"
                 FontWeight="Bold" Click="billScreenButtonEvent" x:Name="billScreenButton" HorizontalContentAlignment="Left">
                 F2 - Billing
             </Button>
             <Button 
-                Grid.Row="5" Grid.Column="1" Background="LightSteelBlue" BorderThickness="0" FontSize="20"
+                Grid.Row="5" Grid.Column="1" Background="FloralWhite" BorderThickness="0" FontSize="20"
                 FontWeight="Bold" Click="invoiceScreenButtonEvent" x:Name="invoiceScreenButton" HorizontalContentAlignment="Left">
                 F3 - View Bills
             </Button>
             <Button 
-                Grid.Row="7" Grid.Column="1" Background="LightSteelBlue" BorderThickness="0" FontSize="20"
+                Grid.Row="7" Grid.Column="1" Background="FloralWhite" BorderThickness="0" FontSize="20"
                 FontWeight="Bold" Click="adminScreenButtonEvent" x:Name="adminScreenButton" HorizontalContentAlignment="Left">
                 F4- Admin
             </Button>
             <Button 
-                Grid.Row="9" Grid.Column="1" Background="LightSteelBlue" BorderThickness="0" FontSize="20"
+                Grid.Row="9" Grid.Column="1" Background="FloralWhite" BorderThickness="0" FontSize="20"
                 FontWeight="Bold" Click="quitEvent" HorizontalContentAlignment="Left">
                 Quit
             </Button>
         </Grid>
+        <Image Grid.Column="2" Source="/Images/home_wallpaper.jpg"/>
     </Grid>
 </UserControl>

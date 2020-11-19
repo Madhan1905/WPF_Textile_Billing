@@ -9,106 +9,53 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="0.15*"/>
-            <RowDefinition Height="0.1*"/>
-            <RowDefinition Height="0.65*"/>
+            <RowDefinition Height="0.85*"/>
         </Grid.RowDefinitions>
-        <Grid Grid.Row="0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="0.05*"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="0.05*"/>
-            </Grid.ColumnDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="0.2*"/>
+            <ColumnDefinition Width="0.8*"/>
+        </Grid.ColumnDefinitions>
+        <Image Source="/Images/blue_abstract.jpg" Stretch="Fill"/>
+        <Grid Background="#012e7c" Grid.Row="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="0.05*"/>
-                <RowDefinition Height="*"/>
+                <RowDefinition Height="0.075*"/>
+                <RowDefinition Height="0.05*"/>
+                <RowDefinition Height="0.075*"/>
+                <RowDefinition Height="0.84*"/>
             </Grid.RowDefinitions>
-            <GroupBox Header="Dashboard" Grid.Column="1" Grid.Row="1" VerticalContentAlignment="Center" FontSize="18">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="0.3*"/>
-                        <ColumnDefinition Width="0.7*"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="0.1*"/>
-                        <RowDefinition Height="0.35*"/>
-                        <RowDefinition Height="0.1*"/>
-                        <RowDefinition Height="0.35*"/>
-                        <RowDefinition Height="0.1*"/>
-                    </Grid.RowDefinitions>
-                    <TextBlock Grid.Row="1" Text="Total Sales" FontWeight="Bold"/>
-                    <TextBlock Grid.Row="3" Text="Total Amount" FontWeight="Bold"/>
-                    <TextBox x:Name="sales_text" Grid.Column="1" Grid.Row="1" Text="0" IsReadOnly="True"/>
-                    <TextBox x:Name="amount_text" Grid.Column="1" Grid.Row="3" Text="0" IsReadOnly="True"/>
-                </Grid>
-            </GroupBox>
-        </Grid>
-        <Grid  Grid.Row="1">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="0.015*"/>
                 <ColumnDefinition Width="0.05*"/>
-                <ColumnDefinition/>
-                <ColumnDefinition Width="0.2*"/>
-                <ColumnDefinition Width="0.01*"/>
+                <ColumnDefinition Width="0.9*"/>
+                <ColumnDefinition Width="0.05*"/>
             </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="0.7*"/>
-                <RowDefinition Height="0.3*"/>
-            </Grid.RowDefinitions>
-            <Button Grid.Column="1" Grid.RowSpan="2" Background="White" Click="Add_Item" BorderThickness="0">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                    </Grid.RowDefinitions>
-                    <Image Source="/Images/add.png"/>
-                    <TextBlock Grid.Row="1" Text="Add Item" FontSize="12"/>
-                </Grid>
-            </Button>
-            <TextBox Grid.Column="3" Grid.Row="1" VerticalContentAlignment="Center" PreviewKeyDown="search_event" x:Name="search_text"/>
+            <Grid Grid.Row="1" Grid.Column="1" Background="FloralWhite">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="0.15*"/>
+                    <ColumnDefinition Width="0.05*"/>
+                    <ColumnDefinition Width="0.8*"/>
+                </Grid.ColumnDefinitions>
+                <Image Grid.Column="0" Source="/Images/dashboard.png" Stretch="Fill"/>
+                <Button Grid.Column="2" Background="FloralWhite" BorderThickness="0" Click="dashboardButtonEvent"
+                        HorizontalContentAlignment="Left" FontSize="25" FontWeight="DemiBold">
+                    Dashboard
+                </Button>
+            </Grid>
+            <Grid Grid.Row="3" Grid.Column="1" Background="FloralWhite">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="0.15*"/>
+                    <ColumnDefinition Width="0.05*"/>
+                    <ColumnDefinition Width="0.8*"/>
+                </Grid.ColumnDefinitions>
+                <Image Grid.Column="0" Source="/Images/items.png" Stretch="Fill"/>
+                <Button Grid.Column="2" Background="FloralWhite" BorderThickness="0" Click="itemsButtonEvent"
+                        HorizontalContentAlignment="Left" FontSize="25" FontWeight="DemiBold">
+                    Items
+                </Button>
+            </Grid>
         </Grid>
-        <FlowDocumentScrollViewer Grid.Row="2" IsToolBarVisible="False">
-            <FlowDocument x:Name="itemsDoc">
-                <Table  x:Name="itemsTable" BorderBrush="Black" BorderThickness="1" CellSpacing="0">
-                    <Table.Columns>
-                        <TableColumn Width="0.05*"/>
-                        <TableColumn Width="0.05*"/>
-                        <TableColumn Width="0.05*"/>
-                        <TableColumn Width="0.2*"/>
-                        <TableColumn Width="0.35*"/>
-                        <TableColumn Width="0.2*"/>
-                        <TableColumn Width="0.1*"/>
-                        <TableColumn Width="0.1*"/>
-                    </Table.Columns>
-                    <TableRowGroup>
-                        <TableRow Background="SteelBlue">
-                            <TableCell BorderBrush="Black" BorderThickness="0,0,1,0" Padding="2">
-                                <Paragraph FontSize="14pt" FontWeight="Bold" TextAlignment="Center">Edit</Paragraph>
-                            </TableCell>
-                            <TableCell BorderBrush="Black" BorderThickness="0,0,1,0" Padding="2">
-                                <Paragraph FontSize="14pt" FontWeight="Bold" TextAlignment="Center">Delete</Paragraph>
-                            </TableCell>
-                            <TableCell BorderBrush="Black" BorderThickness="0,0,1,0" Padding="2">
-                                <Paragraph FontSize="14pt" FontWeight="Bold" TextAlignment="Center">S.No.</Paragraph>
-                            </TableCell>
-                            <TableCell BorderBrush="Black" BorderThickness="0,0,1,0" Padding="2">
-                                <Paragraph FontSize="14pt" FontWeight="Bold" TextAlignment="Center">Barcode</Paragraph>
-                            </TableCell>
-                            <TableCell BorderBrush="Black" BorderThickness="0,0,1,0" Padding="2">
-                                <Paragraph FontSize="14pt" FontWeight="Bold" TextAlignment="Center">Item Name</Paragraph>
-                            </TableCell>
-                            <TableCell BorderBrush="Black" BorderThickness="0,0,1,0" Padding="2">
-                                <Paragraph FontSize="14pt" FontWeight="Bold" TextAlignment="Center">Print Name</Paragraph>
-                            </TableCell>
-                            <TableCell BorderBrush="Black" BorderThickness="0,0,1,0" Padding="2">
-                                <Paragraph FontSize="14pt" FontWeight="Bold" TextAlignment="Center">Cost Price</Paragraph>
-                            </TableCell>
-                            <TableCell Padding="2">
-                                <Paragraph FontSize="14pt" FontWeight="Bold" TextAlignment="Center">MRP</Paragraph>
-                            </TableCell>
-                        </TableRow>
-                    </TableRowGroup>
-                </Table>
-            </FlowDocument>
-        </FlowDocumentScrollViewer>
+        <Grid Grid.Column="1" Grid.RowSpan="2">
+            <ContentControl x:Name="AdminControl"/>
+        </Grid>
     </Grid>
 </UserControl>

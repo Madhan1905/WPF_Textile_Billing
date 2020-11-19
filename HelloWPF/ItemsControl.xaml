@@ -1,0 +1,105 @@
+﻿<UserControl x:Class="TextileApp.ItemsControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:TextileApp"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="0.15*"/>
+            <RowDefinition Height="0.75*"/>
+            <RowDefinition Height="0.10*"/>
+        </Grid.RowDefinitions>
+        <Grid  Grid.Row="0" Grid.Column="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="0.01*"/>
+                <ColumnDefinition Width="0.075*"/>
+                <ColumnDefinition Width="0.583*"/>
+                <ColumnDefinition Width="0.10*"/>
+                <ColumnDefinition Width="0.25*"/>
+                <ColumnDefinition Width="0.10*"/>
+                <ColumnDefinition Width="0.25*"/>
+                <ColumnDefinition Width="0.01*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="0.75*"/>
+                <RowDefinition Height="0.25*"/>
+            </Grid.RowDefinitions>
+            <Button Grid.Column="1" Grid.RowSpan="2" Background="White" Click="Add_Item" BorderThickness="0">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Image Source="/Images/add.png"/>
+                    <TextBlock Grid.Row="1" Text="Add Item" FontSize="12"/>
+                </Grid>
+            </Button>
+            <TextBlock Text="Filter By: " Grid.Column="3" Grid.Row="1" HorizontalAlignment="Right" VerticalAlignment="Center" FontSize="15"/>
+            <ComboBox Grid.Column="4" Grid.Row="1" VerticalContentAlignment="Center" x:Name="filter_combo">
+                <ComboBoxItem IsSelected="True">Barcode</ComboBoxItem>
+                <ComboBoxItem>Name</ComboBoxItem>
+                <ComboBoxItem>Print Name</ComboBoxItem>
+                <ComboBoxItem>Less Than Stock</ComboBoxItem>
+            </ComboBox>
+            <TextBlock Text="Search: " Grid.Column="5" Grid.Row="1" HorizontalAlignment="Right" VerticalAlignment="Center" FontSize="15"/>
+            <TextBox Grid.Column="6" Grid.Row="1" VerticalContentAlignment="Center" PreviewKeyDown="search_event" x:Name="search_text"/>
+        </Grid>
+        <FlowDocumentScrollViewer Grid.Row="1" Grid.Column="1" IsToolBarVisible="False">
+            <FlowDocument x:Name="itemsDoc">
+                <Table  x:Name="itemsTable" BorderBrush="Black" BorderThickness="1" CellSpacing="0">
+                    <Table.Columns>
+                        <TableColumn Width="0.05*"/>
+                        <TableColumn Width="0.05*"/>
+                        <TableColumn Width="0.05*"/>
+                        <TableColumn Width="0.15*"/>
+                        <TableColumn Width="0.3*"/>
+                        <TableColumn Width="0.2*"/>
+                        <TableColumn Width="0.1*"/>
+                        <TableColumn Width="0.1*"/>
+                        <TableColumn Width="0.1*"/>
+                    </Table.Columns>
+                    <TableRowGroup>
+                        <TableRow Background="SteelBlue">
+                            <TableCell BorderBrush="Black" BorderThickness="0,0,1,0" Padding="2">
+                                <Paragraph FontSize="14pt" FontWeight="Bold" TextAlignment="Center">Edit</Paragraph>
+                            </TableCell>
+                            <TableCell BorderBrush="Black" BorderThickness="0,0,1,0" Padding="2">
+                                <Paragraph FontSize="14pt" FontWeight="Bold" TextAlignment="Center">Delete</Paragraph>
+                            </TableCell>
+                            <TableCell BorderBrush="Black" BorderThickness="0,0,1,0" Padding="2">
+                                <Paragraph FontSize="14pt" FontWeight="Bold" TextAlignment="Center">S.No.</Paragraph>
+                            </TableCell>
+                            <TableCell BorderBrush="Black" BorderThickness="0,0,1,0" Padding="2">
+                                <Paragraph FontSize="14pt" FontWeight="Bold" TextAlignment="Center">Barcode</Paragraph>
+                            </TableCell>
+                            <TableCell BorderBrush="Black" BorderThickness="0,0,1,0" Padding="2">
+                                <Paragraph FontSize="14pt" FontWeight="Bold" TextAlignment="Center">Item Name</Paragraph>
+                            </TableCell>
+                            <TableCell BorderBrush="Black" BorderThickness="0,0,1,0" Padding="2">
+                                <Paragraph FontSize="14pt" FontWeight="Bold" TextAlignment="Center">Print Name</Paragraph>
+                            </TableCell>
+                            <TableCell BorderBrush="Black" BorderThickness="0,0,1,0" Padding="2">
+                                <Paragraph FontSize="14pt" FontWeight="Bold" TextAlignment="Center">Cost Price</Paragraph>
+                            </TableCell>
+                            <TableCell BorderBrush="Black" BorderThickness="0,0,1,0" Padding="2">
+                                <Paragraph FontSize="14pt" FontWeight="Bold" TextAlignment="Center">MRP</Paragraph>
+                            </TableCell>
+                            <TableCell Padding="2">
+                                <Paragraph FontSize="14pt" FontWeight="Bold" TextAlignment="Center">Stock</Paragraph>
+                            </TableCell>
+                        </TableRow>
+                    </TableRowGroup>
+                </Table>
+            </FlowDocument>
+        </FlowDocumentScrollViewer>
+        <Grid Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Center" x:Name="navigation_grid">
+            <DockPanel VerticalAlignment="Center">
+                <Image PreviewMouseDown="previous_event" Margin="5,0,5,0" Height="25" Source="/Images/previous.png"/>
+                <Image PreviewMouseDown="next_event" Margin="5,0,5,0" Height="25" Source="/Images/next.png"/>
+            </DockPanel>
+        </Grid>
+    </Grid>
+</UserControl>

@@ -15,10 +15,16 @@
     <Compile Update="BillingControl.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="DashboardControl.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="HomeControl.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="InvoiceControl.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="ItemsControl.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="LicenseControl.xaml.cs">
@@ -41,6 +47,9 @@
     <Page Update="BillingControl.xaml">
       <SubType>Designer</SubType>
     </Page>
+    <Page Update="DashboardControl.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="Dictionary1.xaml">
       <SubType>Designer</SubType>
     </Page>
@@ -48,6 +57,9 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="InvoiceControl.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="ItemsControl.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="LicenseControl.xaml">

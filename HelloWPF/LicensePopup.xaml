@@ -6,11 +6,7 @@
         xmlns:local="clr-namespace:TextileApp"
         mc:Ignorable="d"
         Title="LicensePopup" Height="450" Width="800">
-    <StackPanel Margin="10">
-        <Label>Select File:</Label>
-        <Label Foreground="Red" x:Name="error_text" Visibility="Hidden">*Invalid License file</Label>
-        <TextBox FontSize="20" x:Name="filePath_text" IsReadOnly="True"/>
-        <Button x:Name="upload_button" Click="uploadEvent">Upload</Button>
-        <Button x:Name="submit_button" Click="submitEvent" Visibility="Collapsed">Submit</Button>
-    </StackPanel>
+    <Grid>
+        
+    </Grid>
 </Window>

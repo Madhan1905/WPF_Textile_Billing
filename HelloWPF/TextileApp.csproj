@@ -10,12 +10,18 @@
   <ItemGroup>
     <None Remove="Images\add.png" />
     <None Remove="Images\add_invoice.png" />
+    <None Remove="Images\blue_abstract.jpg" />
+    <None Remove="Images\dashboard.png" />
     <None Remove="Images\delete.png" />
     <None Remove="Images\delete_row.png" />
     <None Remove="Images\edit.png" />
     <None Remove="Images\home_icon.png" />
+    <None Remove="Images\home_wallpaper.jpg" />
     <None Remove="Images\icon.png" />
     <None Remove="Images\insert.png" />
+    <None Remove="Images\items.png" />
+    <None Remove="Images\next.png" />
+    <None Remove="Images\previous.png" />
     <None Remove="Images\print.png" />
     <None Remove="Images\remove_invoice.png" />
     <None Remove="Images\view_invoice.png" />
@@ -27,6 +33,12 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Images\add_invoice.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\blue_abstract.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\dashboard.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Images\delete.png">
@@ -41,10 +53,22 @@
     <Resource Include="Images\home_icon.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
+    <Resource Include="Images\home_wallpaper.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Images\insert.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Images\icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\items.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\next.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\previous.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Images\print.png">
