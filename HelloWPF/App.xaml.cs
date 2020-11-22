@@ -24,8 +24,9 @@ namespace HelloWPF
     /// </summary>
     public partial class App : Application
     {
-        public static string productDatabasePath = "D://Thinkershut//Products.db";
-        public static string licensePath = "D://Thinkershut//license.lic";
+        public static string drive = "F://Thinkershut";
+        public static string productDatabasePath = drive+"//Products.db";
+        public static string licensePath = drive+"//license.lic";
         public static Invoice currentInvoice = null;
 
         public static bool validateLicenseFile(string filePath)
@@ -34,7 +35,7 @@ namespace HelloWPF
             byte[] iv = ASCIIEncoding.ASCII.GetBytes("KamehamehaX4".PadLeft(16));
             //Create a file stream.
             var assembly = Assembly.GetExecutingAssembly();
-            Directory.CreateDirectory("D://Thinkershut");
+            Directory.CreateDirectory(drive);
             if (File.Exists(filePath))
             {
                 try

@@ -79,7 +79,8 @@
         </Grid>
         <DataGrid Name="billTable" AutoGenerateColumns="False" Grid.Row="1" Loaded="dataGridLoaded"
                   Grid.Column="1" ColumnHeaderStyle="{StaticResource ColumnHeaderStyle}" CellStyle="{StaticResource CellStyle}" 
-                  PreviewKeyDown="dataGridKeyEvent" LoadingRow="dataGridLoadingRow" RowHeaderStyle="{StaticResource RowHeaderStyle}">
+                  PreviewKeyDown="dataGridKeyEvent" LoadingRow="dataGridLoadingRow" RowHeaderStyle="{StaticResource RowHeaderStyle}" 
+                  BeginningEdit="billTableBeginEditing" PreviewKeyUp="dataGridKeyUpEvent">
 
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Barcode" Binding="{Binding Barcode}" Width="0.2*"/>
@@ -89,6 +90,17 @@
                 <DataGridTextColumn Header="Total" Binding="{Binding Total}" Width="0.09*" IsReadOnly="True"/>
             </DataGrid.Columns>
         </DataGrid>
+        <Popup Name="MyPopup"
+               Placement="Mouse"
+               HorizontalOffset="100"
+               VerticalOffset="0"
+               AllowsTransparency="True"
+               IsOpen="False">
+            <Grid>
+                <Ellipse Width="200" Height="200" Fill="Aquamarine"/>
+            </Grid>
+
+        </Popup>
         <Grid Grid.Row="3" Grid.Column="1" Background="SteelBlue">
             <Grid.RowDefinitions>
                 <RowDefinition Height="0.5*"/>

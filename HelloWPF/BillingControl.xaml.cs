@@ -24,6 +24,7 @@ namespace HelloWPF
         private ContentControl MainWindowControl;
         private List<BillingProduct> products;
         private bool editing;
+        private bool editMode;
         public BillingControl(Invoice invoice, ContentControl WindowControl,bool editBill)
         {
             InitializeComponent();
@@ -59,6 +60,11 @@ namespace HelloWPF
             int discount = discountText.Text == "" ? 0 : int.Parse(discountText.Text);
             grandTotalText.Text = formatTotal(sum-discount);
             billTable.ItemsSource = products;
+        }
+
+        private void billTableBeginEditing(object sender, DataGridBeginningEditEventArgs e)
+        {
+            editMode = true;
         }
 
         private void dataGridLoaded(Object sender, RoutedEventArgs e)
@@ -171,6 +177,7 @@ namespace HelloWPF
                     }
                 }
             }
+            editMode = false;
         }
 
         private void addProduct(BillingProduct product,List<Product> queryProducts, TextBox el)
@@ -341,7 +348,72 @@ namespace HelloWPF
                         invoice.BillingProducts = JsonSerializer.Serialize<List<BillingProduct>>(products);
                         billTable.Items.Refresh();
                         break;
+                    case Key.Enter:
+                        switchCells(e,Key.Enter);
+                        break;
+                    case Key.Back:
+                        switchCells(e,Key.Back);
+                        break;
                 }
+            }
+        }
+
+        private void dataGridKeyUpEvent(object sender, KeyEventArgs e)
+        {
+            string columnSelected = billTable.CurrentColumn.Header as string;
+            if (billTable.SelectedItem != null && columnSelected == "Qty.")
+            {
+                switch (e.Key)
+                {
+                    case Key.Enter:
+                        billTable.CurrentColumn = billTable.Columns[0];
+                        e.Handled = true;
+                        break;
+                }
+            }
+        }
+
+        private void switchCells(KeyEventArgs e, Key key)
+        {
+            if (!editMode)
+            {
+                string columnSelected = billTable.CurrentColumn.Header as string;
+                if (key == Key.Enter)
+                {
+                    switch (columnSelected)
+                    {
+                        case "Barcode":
+                            billTable.CurrentColumn = billTable.Columns[1];
+                            e.Handled = true;
+                            break;
+                        case "Name":
+                            billTable.CurrentColumn = billTable.Columns[0];
+                            break;
+                        case "Qty.":
+                            billTable.CurrentColumn = billTable.Columns[0];
+                            break;
+                    }
+                } else
+                {
+                    switch (columnSelected)
+                    {
+                        case "Barcode":
+                            int selectedIndex = billTable.SelectedIndex == 0 ? 0 : billTable.SelectedIndex - 1;
+                            billTable.SelectedIndex = selectedIndex;
+                            billTable.CurrentCell = new DataGridCellInfo(billTable.Items[selectedIndex], billTable.Columns[2]);
+                            e.Handled = true;
+                            break;
+                        case "Name":
+                            billTable.CurrentColumn = billTable.Columns[0];
+                            e.Handled = true;
+                            break;
+                        case "Qty.":
+                            billTable.CurrentColumn = billTable.Columns[1];
+                            e.Handled = true;
+                            break;
+                    }
+                }
+                
             }
         }
 

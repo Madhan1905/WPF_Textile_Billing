@@ -21,7 +21,7 @@ namespace HelloWPF
             var sysHeight = System.Windows.SystemParameters.PrimaryScreenHeight;
             var sysWidth = System.Windows.SystemParameters.PrimaryScreenWidth;
 
-            this.Height = (sysHeight * 0.50);
+            this.Height = (sysHeight * 0.55);
             this.Width = (sysWidth * 0.40);
             this.Left = sysWidth * 0.5 - this.Width * 0.5;
             this.Top = sysHeight * 0.5 - this.Height * 0.5;
@@ -31,6 +31,7 @@ namespace HelloWPF
             printName.Text = product.PrintName;
             cost.Text = product.Cost;
             mrp.Text = product.MRP;
+            stock.Text = product.stock.ToString();
             if (!product.Barcode.Equals(""))
             {
                 submitButton.Content = "Update";
@@ -66,7 +67,8 @@ namespace HelloWPF
                     Name = name.Text,
                     PrintName = printName.Text,
                     Cost = cost.Text,
-                    MRP = mrp.Text
+                    MRP = mrp.Text,
+                    stock = long.Parse(stock.Text)
                 };
 
                 using (SQLiteConnection dbConnection = new SQLiteConnection(App.productDatabasePath))

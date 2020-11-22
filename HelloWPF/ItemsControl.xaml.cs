@@ -107,7 +107,7 @@ namespace TextileApp
                     {
                         dbConnection.CreateTable<Product>();
                         dbConnection.Delete(product);
-                        products = dbConnection.Table<Product>().ToList();
+                        products = dbConnection.Table<Product>().Take(15).ToList();
                         populateTable(products);
                     }
                     break;
@@ -125,7 +125,7 @@ namespace TextileApp
             using (SQLiteConnection dbConnection = new SQLiteConnection(App.productDatabasePath))
             {
                 dbConnection.CreateTable<Product>();
-                products = dbConnection.Table<Product>().ToList();
+                products = dbConnection.Table<Product>().Take(15).ToList();
             }
             populateTable(products);
         }
@@ -209,7 +209,8 @@ namespace TextileApp
                 Name = "",
                 SellingPrice = "",
                 Cost = "",
-                MRP = ""
+                MRP = "",
+                stock = 0,
             };
             AddProductWindow addProductWindow = new AddProductWindow(product);
             addProductWindow.ShowDialog();

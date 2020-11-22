@@ -64,6 +64,7 @@ namespace TextileApp
                 day = day.AddDays(-1);
             } while (!day.AddDays(+1).DayOfWeek.Equals(DayOfWeek.Monday));
 
+            day = DateTime.Now;
             do
             {
                 monthlyQueryString += "Date == '" + day.ToString("dd/M/yyyy") + "'";
