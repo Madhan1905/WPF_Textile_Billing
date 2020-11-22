@@ -4,17 +4,17 @@
 winexe
 C#
 .cs
-F:\Madhan\Workspaces\C#\HelloWPF\HelloWPF\obj\Release\netcoreapp3.1\
+F:\Madhan\Workspaces\C#\WPF_Textile_Billing\HelloWPF\obj\Release\netcoreapp3.1\
 TextileApp
 none
 false
 TRACE;RELEASE;NETCOREAPP;NETCOREAPP3_1
-F:\Madhan\Workspaces\C#\HelloWPF\HelloWPF\App.xaml
-12-867967961
+F:\Madhan\Workspaces\C#\WPF_Textile_Billing\HelloWPF\App.xaml
+11-992202041
 
-18-1604214806
+17930547953
 197397990378
-AddProductWindow.xaml;BillingControl.xaml;DashboardControl.xaml;Dictionary1.xaml;HomeControl.xaml;InvoiceControl.xaml;ItemsControl.xaml;LicenseControl.xaml;LicensePopup.xaml;MainWindow.xaml;PasswordPopup.xaml;ViewItemsControl.xaml;
+AddProductWindow.xaml;BillingControl.xaml;DashboardControl.xaml;Dictionary1.xaml;HomeControl.xaml;InvoiceControl.xaml;ItemsControl.xaml;LicenseControl.xaml;MainWindow.xaml;PasswordPopup.xaml;ViewItemsControl.xaml;
 
-False
+True
 

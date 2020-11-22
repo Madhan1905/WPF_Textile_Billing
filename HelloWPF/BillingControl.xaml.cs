@@ -25,9 +25,11 @@ namespace HelloWPF
         private List<BillingProduct> products;
         private bool editing;
         private bool editMode;
+        private bool popupComplete;
         public BillingControl(Invoice invoice, ContentControl WindowControl,bool editBill)
         {
             InitializeComponent();
+            initializePopup();
             editing = editBill;
 
             this.invoice = invoice;
@@ -62,6 +64,42 @@ namespace HelloWPF
             billTable.ItemsSource = products;
         }
 
+        private void initializePopup()
+        {
+            var sysHeight = System.Windows.SystemParameters.PrimaryScreenHeight;
+            var sysWidth = System.Windows.SystemParameters.PrimaryScreenWidth;
+            var width = sysWidth * 0.5;
+
+            productPopup.Height = sysHeight * 0.55;
+            productPopup.Width = width;
+            productPopup.HorizontalOffset = (sysWidth / 2) - sysWidth * 0.26;
+
+            barcode_column.Width = width * 0.25;
+            name_column.Width = width * 0.5;
+            cost_column.Width = width * 0.2;
+        }
+
+        private void billTableTextChangeEvent(object sender, TextChangedEventArgs e)
+        {
+            var el = e.OriginalSource as TextBox;
+            if (!el.Text.Equals("") && !popupComplete)
+            {
+                using (SQLiteConnection dbConnection = new SQLiteConnection(App.productDatabasePath))
+                {
+                    List<Product> items = dbConnection.Table<Product>().ToList()
+                                            .FindAll(prod => prod.Name.ToUpper().StartsWith(el.Text.ToUpper()));
+                    products_list.ItemsSource = items;
+                    products_list.SelectedIndex = 0;
+                    productPopup.IsOpen = true;
+                }
+            } else
+            {
+                productPopup.IsOpen = false;
+            }
+            popupComplete = false;
+            
+        }
+
         private void billTableBeginEditing(object sender, DataGridBeginningEditEventArgs e)
         {
             editMode = true;
@@ -89,54 +127,7 @@ namespace HelloWPF
                             List<Product> queryProducts = sql_cmd.ExecuteQuery<Product>();
 
                             BillingProduct product = (BillingProduct)billTable.SelectedItem;
-                            if (queryProducts.Count > 0)
-                            {
-                                List<BillingProduct> availableProducts = new List<BillingProduct>();
-                                if (invoice.BillingProducts != null)
-                                {
-                                    availableProducts = JsonSerializer.Deserialize<List<BillingProduct>>(invoice.BillingProducts);
-                                }
-                                if (availableProducts.Find(prod => prod.Barcode == el.Text) != null)
-                                {
-                                    MessageBoxResult result = MessageBox.Show("Add Duplicate product?", "Confirmation", 
-                                                                            MessageBoxButton.YesNo, MessageBoxImage.Question);
-                                    if(result == MessageBoxResult.Yes)
-                                    {
-                                        BillingProduct billingProduct = products.Find(prod => prod.Barcode == el.Text);
-                                        billingProduct.Quantity = billingProduct.Quantity + 1;
-                                        billingProduct.Total = int.Parse(queryProducts[0].MRP) * billingProduct.Quantity;
-
-                                        int discount = discountText.Text == "" ? 0 : int.Parse(discountText.Text);
-                                        int sum = products.Sum(product => product.Total);
-                                        grandTotalText.Text = formatTotal(sum-discount);
-
-                                        billTable.CellEditEnding -= billTableCellEditEvent;
-                                        billTable.CancelEdit();
-                                        billTable.CancelEdit();
-                                        billTable.Items.Refresh();
-                                        billTable.CellEditEnding += billTableCellEditEvent;
-                                    } else
-                                    {
-                                        billTable.CellEditEnding -= billTableCellEditEvent;
-                                        billTable.CancelEdit();
-                                        billTable.CancelEdit();
-                                        billTable.Items.Refresh();
-                                        billTable.CellEditEnding += billTableCellEditEvent;
-                                    }
-                                } else
-                                {
-                                    addProduct(product, queryProducts, el);
-                                }
-                            }
-                            else
-                            {
-                                MessageBox.Show("Barcode not Found", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
-                                billTable.CellEditEnding -= billTableCellEditEvent;
-                                billTable.CancelEdit();
-                                billTable.CancelEdit();
-                                billTable.Items.Refresh();
-                                billTable.CellEditEnding += billTableCellEditEvent;
-                            }
+                            handleProductCommit(product, queryProducts, el);
                         } else
                         {
                             billTable.CellEditEnding -= billTableCellEditEvent;
@@ -146,7 +137,8 @@ namespace HelloWPF
                             billTable.CellEditEnding += billTableCellEditEvent;
                         }
                     }
-                } else
+                    editMode = false;
+                } else if (e.Column.Header.Equals("Qty."))
                 {
                     var el = e.EditingElement as TextBox;
                     if (!el.Text.Equals("") && int.TryParse(el.Text,out _))
@@ -175,14 +167,81 @@ namespace HelloWPF
                         billTable.Items.Refresh();
                         billTable.CellEditEnding += billTableCellEditEvent;
                     }
+                } else
+                {
+                    productPopup.IsOpen = false;
+                    popupComplete = true;
+                    var el = e.EditingElement as TextBox;
+                    BillingProduct product = (BillingProduct)billTable.SelectedItem;
+                    List<Product> queryProducts = new List<Product>();
+                    if(products_list.SelectedIndex != -1)
+                    {
+                        Product selectedProduct = products_list.SelectedItem as Product;
+                        queryProducts.Add(selectedProduct);
+                        el.Text = selectedProduct.Name;
+                        handleProductCommit(product, queryProducts, el);
+                    }
                 }
             }
-            editMode = false;
+        }
+
+        private void handleProductCommit(BillingProduct product, List<Product> queryProducts, TextBox el)
+        {
+            if (queryProducts.Count > 0)
+            {
+                List<BillingProduct> availableProducts = new List<BillingProduct>();
+                if (invoice.BillingProducts != null)
+                {
+                    availableProducts = JsonSerializer.Deserialize<List<BillingProduct>>(invoice.BillingProducts);
+                }
+                if (availableProducts.Find(prod => prod.Barcode == queryProducts[0].Barcode) != null)
+                {
+                    MessageBoxResult result = MessageBox.Show("Add Duplicate product?", "Confirmation",
+                                                            MessageBoxButton.YesNo, MessageBoxImage.Question);
+                    if (result == MessageBoxResult.Yes)
+                    {
+                        BillingProduct billingProduct = products.Find(prod => prod.Barcode == queryProducts[0].Barcode);
+                        billingProduct.Quantity = billingProduct.Quantity + 1;
+                        billingProduct.Total = int.Parse(queryProducts[0].MRP) * billingProduct.Quantity;
+
+                        int discount = discountText.Text == "" ? 0 : int.Parse(discountText.Text);
+                        int sum = products.Sum(product => product.Total);
+                        grandTotalText.Text = formatTotal(sum - discount);
+
+                        billTable.CellEditEnding -= billTableCellEditEvent;
+                        billTable.CancelEdit();
+                        billTable.CancelEdit();
+                        billTable.Items.Refresh();
+                        billTable.CellEditEnding += billTableCellEditEvent;
+                    }
+                    else
+                    {
+                        billTable.CellEditEnding -= billTableCellEditEvent;
+                        billTable.CancelEdit();
+                        billTable.CancelEdit();
+                        billTable.Items.Refresh();
+                        billTable.CellEditEnding += billTableCellEditEvent;
+                    }
+                }
+                else
+                {
+                    addProduct(product, queryProducts, el);
+                }
+            }
+            else
+            {
+                MessageBox.Show("Barcode not Found", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                billTable.CellEditEnding -= billTableCellEditEvent;
+                billTable.CancelEdit();
+                billTable.CancelEdit();
+                billTable.Items.Refresh();
+                billTable.CellEditEnding += billTableCellEditEvent;
+            }
         }
 
         private void addProduct(BillingProduct product,List<Product> queryProducts, TextBox el)
         {
-            product.Barcode = el.Text;
+            product.Barcode = queryProducts[0].Barcode;
             product.Name = queryProducts[0].Name;
             product.PrintName = queryProducts[0].PrintName;
             product.MRP = int.Parse(queryProducts[0].MRP);
@@ -214,8 +273,11 @@ namespace HelloWPF
 
         private void NumberValidationEvent(Object sender, TextCompositionEventArgs e)
         {
-            Regex regex = new Regex("[^0-9-]+");
-            e.Handled = regex.IsMatch(e.Text);
+            if (!billTable.CurrentColumn.Header.ToString().Equals("Name"))
+            {
+                Regex regex = new Regex("[^0-9-]+");
+                e.Handled = regex.IsMatch(e.Text);
+            }
         }
 
         private void NonNegativeNumberValidationEvent(Object sender, TextCompositionEventArgs e)
@@ -333,6 +395,7 @@ namespace HelloWPF
         {
             if(billTable.SelectedItem != null)
             {
+                int selectedIndex;
                 switch (e.Key)
                 {
                     case Key.Delete:
@@ -354,6 +417,22 @@ namespace HelloWPF
                     case Key.Back:
                         switchCells(e,Key.Back);
                         break;
+                    case Key.Down:
+                        selectedIndex = products_list.SelectedIndex;
+                        if(selectedIndex < products_list.Items.Count)
+                        {
+                            products_list.SelectedIndex = selectedIndex + 1;
+                            products_list.ScrollIntoView(products_list.Items[selectedIndex]);
+                        }
+                        break;
+                    case Key.Up:
+                        selectedIndex = products_list.SelectedIndex;
+                        if(selectedIndex > 0)
+                        {
+                            products_list.SelectedIndex = selectedIndex - 1;
+                            products_list.ScrollIntoView(products_list.Items[selectedIndex]);
+                        }
+                        break;
                 }
             }
         }
@@ -361,13 +440,14 @@ namespace HelloWPF
         private void dataGridKeyUpEvent(object sender, KeyEventArgs e)
         {
             string columnSelected = billTable.CurrentColumn.Header as string;
-            if (billTable.SelectedItem != null && columnSelected == "Qty.")
+            if (billTable.SelectedItem != null && editMode && (columnSelected == "Qty." || columnSelected == "Name"))
             {
                 switch (e.Key)
                 {
                     case Key.Enter:
                         billTable.CurrentColumn = billTable.Columns[0];
                         e.Handled = true;
+                        editMode = false;
                         break;
                 }
             }

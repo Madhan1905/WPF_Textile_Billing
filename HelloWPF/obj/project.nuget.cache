@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "ZUxJzmxnD9AAU675AC8pByCLenxvge84Y4+bTPRB6a6TQusDioR2egwFF6SiSJrEf8a+5D5mZaCp3JoaDyOqgA==",
+  "dgSpecHash": "Ve/Cg/OkHbEmL+Z5wTgX6EO8byHtbDk6RyHt4P3ZKWbhBJ3Cw4LGvEiRwidacQiIEGXVoAGWg5r0aV6u3P08Iw==",
   "success": true,
-  "projectFilePath": "F:\\Madhan\\Workspaces\\C#\\HelloWPF\\HelloWPF\\TextileApp.csproj",
+  "projectFilePath": "F:\\Madhan\\Workspaces\\C#\\WPF_Textile_Billing\\HelloWPF\\TextileApp.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\hp\\.nuget\\packages\\sqlite-net-pcl\\1.7.335\\sqlite-net-pcl.1.7.335.nupkg.sha512",
     "C:\\Users\\hp\\.nuget\\packages\\sqlitepclraw.bundle_green\\2.0.3\\sqlitepclraw.bundle_green.2.0.3.nupkg.sha512",

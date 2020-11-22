@@ -53,7 +53,7 @@ namespace TextileApp {
                 return;
             }
             _contentLoaded = true;
-            System.Uri resourceLocater = new System.Uri("/TextileApp;component/licensepopup.xaml", System.UriKind.Relative);
+            System.Uri resourceLocater = new System.Uri("/TextileApp;V1.0.0.0;component/licensepopup.xaml", System.UriKind.Relative);
             
             #line 1 "..\..\..\LicensePopup.xaml"
             System.Windows.Application.LoadComponent(this, resourceLocater);

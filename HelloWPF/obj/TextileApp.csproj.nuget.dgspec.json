@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "F:\\Madhan\\Workspaces\\C#\\HelloWPF\\HelloWPF\\TextileApp.csproj": {}
+    "F:\\Madhan\\Workspaces\\C#\\WPF_Textile_Billing\\HelloWPF\\TextileApp.csproj": {}
   },
   "projects": {
-    "F:\\Madhan\\Workspaces\\C#\\HelloWPF\\HelloWPF\\TextileApp.csproj": {
+    "F:\\Madhan\\Workspaces\\C#\\WPF_Textile_Billing\\HelloWPF\\TextileApp.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "F:\\Madhan\\Workspaces\\C#\\HelloWPF\\HelloWPF\\TextileApp.csproj",
+        "projectUniqueName": "F:\\Madhan\\Workspaces\\C#\\WPF_Textile_Billing\\HelloWPF\\TextileApp.csproj",
         "projectName": "TextileApp",
-        "projectPath": "F:\\Madhan\\Workspaces\\C#\\HelloWPF\\HelloWPF\\TextileApp.csproj",
+        "projectPath": "F:\\Madhan\\Workspaces\\C#\\WPF_Textile_Billing\\HelloWPF\\TextileApp.csproj",
         "packagesPath": "C:\\Users\\hp\\.nuget\\packages\\",
-        "outputPath": "F:\\Madhan\\Workspaces\\C#\\HelloWPF\\HelloWPF\\obj\\",
+        "outputPath": "F:\\Madhan\\Workspaces\\C#\\WPF_Textile_Billing\\HelloWPF\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\hp\\AppData\\Roaming\\NuGet\\NuGet.Config",

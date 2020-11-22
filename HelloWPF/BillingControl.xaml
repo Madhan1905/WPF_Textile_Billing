@@ -25,6 +25,9 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
+        <Style x:Key="NameColumnStyle" TargetType="TextBox">
+            <EventSetter Event="TextChanged" Handler="billTableTextChangeEvent"/>
+        </Style>
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -84,22 +87,35 @@
 
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Barcode" Binding="{Binding Barcode}" Width="0.2*"/>
-                <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="0.35*" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="0.35*" EditingElementStyle="{StaticResource NameColumnStyle}"/>
                 <DataGridTextColumn Header="Qty." Binding="{Binding Quantity}" Width="0.1*"/>
                 <DataGridTextColumn Header="MRP" Binding="{Binding MRP}" Width="0.1*" IsReadOnly="True"/>
                 <DataGridTextColumn Header="Total" Binding="{Binding Total}" Width="0.09*" IsReadOnly="True"/>
             </DataGrid.Columns>
         </DataGrid>
-        <Popup Name="MyPopup"
-               Placement="Mouse"
-               HorizontalOffset="100"
-               VerticalOffset="0"
-               AllowsTransparency="True"
-               IsOpen="False">
-            <Grid>
-                <Ellipse Width="200" Height="200" Fill="Aquamarine"/>
+        <Popup x:Name="productPopup" Placement="Center" PlacementTarget="{Binding ElementName=billTable}" IsOpen="False">
+            <Popup.Resources>
+                <Style x:Key="myHeaderStyle" TargetType="{x:Type GridViewColumnHeader}">
+                    <Setter Property="Visibility" Value="Collapsed" />
+                </Style>
+            </Popup.Resources>
+            <Grid Background="SteelBlue">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="0.05*"/>
+                    <RowDefinition Height="0.95*"/>
+                </Grid.RowDefinitions>
+                <TextBox Text="Select an Item" Background="#012e7c" BorderBrush="#012e7c" FontSize="18" FontWeight="DemiBold"
+                         Foreground="White" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" IsReadOnly="True"/>
+                <ListView x:Name="products_list" Background="SteelBlue" Grid.Row="1" ScrollViewer.VerticalScrollBarVisibility="Hidden" FontSize="20">
+                    <ListView.View>
+                        <GridView ColumnHeaderContainerStyle="{StaticResource myHeaderStyle}">
+                            <GridViewColumn x:Name="barcode_column" Width="120" DisplayMemberBinding="{Binding Barcode}" />
+                            <GridViewColumn x:Name="name_column" Width="50" DisplayMemberBinding="{Binding Name}" />
+                            <GridViewColumn x:Name="cost_column" Width="150" DisplayMemberBinding="{Binding Cost}" />
+                        </GridView>
+                    </ListView.View>
+                </ListView>
             </Grid>
-
         </Popup>
         <Grid Grid.Row="3" Grid.Column="1" Background="SteelBlue">
             <Grid.RowDefinitions>
