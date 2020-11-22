@@ -7,7 +7,8 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <StackPanel Margin="10">
-        <Label>Select File:</Label>
+        <Label Foreground="Red">Your license file is invalid or expired. Please contact admin - 8870395228</Label>
+        <Label>Select File: </Label>
         <Label Foreground="Red" x:Name="error_text" Visibility="Hidden">*Invalid License file</Label>
         <TextBox FontSize="20" x:Name="filePath_text" IsReadOnly="True"/>
         <Button x:Name="upload_button" Click="uploadEvent">Upload</Button>

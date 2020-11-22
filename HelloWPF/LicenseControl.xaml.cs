@@ -8,6 +8,7 @@ using System.Net.NetworkInformation;
 using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.Json;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -28,9 +29,9 @@ namespace TextileApp
             var sysHeight = System.Windows.SystemParameters.PrimaryScreenHeight;
             var sysWidth = System.Windows.SystemParameters.PrimaryScreenWidth;
 
-            upload_button.Margin = new Thickness(0, sysWidth * 0.01, 0, 0);
+            upload_button.Margin = new Thickness(0, sysWidth * 0.02, 0, 0);
             upload_button.Height = sysHeight * 0.035;
-            submit_button.Margin = new Thickness(0, sysWidth * 0.01, 0, 0);
+            submit_button.Margin = new Thickness(0, sysWidth * 0.02, 0, 0);
             submit_button.Height = sysHeight * 0.035;
 
             MainWindow = window;
@@ -90,7 +91,12 @@ namespace TextileApp
                         where nic.OperationalStatus == OperationalStatus.Up
                         select nic.GetPhysicalAddress().ToString()
                     ).FirstOrDefault();
-                    sWriter.WriteLine(macAddr);
+
+                    var licenseDetails = new Dictionary<string, string>();
+                    licenseDetails.Add("macAddress", macAddr);
+                    licenseDetails.Add("expirationDate", App.expirationDate);
+                    string jsonString = JsonSerializer.Serialize(licenseDetails);
+                    sWriter.WriteLine(jsonString);
 
                     //Close all the connections.  
                     sWriter.Close();

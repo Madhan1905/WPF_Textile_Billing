@@ -28,6 +28,7 @@ namespace HelloWPF
         public static string productDatabasePath = drive+"//Products.db";
         public static string licensePath = drive+"//license.lic";
         public static Invoice currentInvoice = null;
+        public static string expirationDate = "";
 
         public static bool validateLicenseFile(string filePath)
         {
@@ -59,11 +60,17 @@ namespace HelloWPF
                         select nic.GetPhysicalAddress().ToString()
                     ).FirstOrDefault();
 
-                    string s = sReader.ReadToEnd().Replace("\r\n", "");
+                    var licenseObject = JsonSerializer.Deserialize<Dictionary<string,string>>(sReader.ReadToEnd());
                     //Close the streams.
                     sReader.Close();
 
-                    return s.Equals(macAddr);
+                    string licenseMac = licenseObject.GetValueOrDefault("macAddress");
+                    DateTime licenseDate = DateTime.ParseExact(licenseObject.GetValueOrDefault("expirationDate"),
+                                            "dd/M/yyyy", System.Globalization.CultureInfo.InvariantCulture);
+
+                    expirationDate = licenseObject.GetValueOrDefault("expirationDate");
+
+                    return (licenseMac.Equals(macAddr) && DateTime.Now <= licenseDate);
                 }
                 catch
                 {

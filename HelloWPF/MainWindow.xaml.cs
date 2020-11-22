@@ -20,6 +20,14 @@ namespace HelloWPF
 
             if (App.validateLicenseFile(App.licensePath))
             {
+                DateTime expirationDate = DateTime.ParseExact(App.expirationDate, "dd/M/yyyy", 
+                                            System.Globalization.CultureInfo.InvariantCulture);
+                double daysLeft = Math.Ceiling((expirationDate - DateTime.Now).TotalDays);
+                if (daysLeft == 10 || daysLeft == 5 || daysLeft == 3 || daysLeft == 1)
+                {
+                    MessageBox.Show("Your license file expires in "+ daysLeft + " days.\nPlease Contact admin @8870395228", "Reminder",
+                                                            MessageBoxButton.OK, MessageBoxImage.Warning);
+                }
                 this.WindowState = WindowState.Maximized;
                 footer_grid.Visibility = Visibility.Visible;
                 MainWindowControl.Content = new HomeControl(MainWindowControl);
@@ -27,7 +35,7 @@ namespace HelloWPF
             {
                 var sysHeight = System.Windows.SystemParameters.PrimaryScreenHeight;
                 var sysWidth = System.Windows.SystemParameters.PrimaryScreenWidth;
-                this.Height = (sysHeight * 0.25);
+                this.Height = (sysHeight * 0.3);
                 this.Width = (sysWidth * 0.3);
                 this.Left = sysWidth * 0.5 - this.Width * 0.5;
                 this.Top = sysHeight * 0.5 - this.Height * 0.5;
