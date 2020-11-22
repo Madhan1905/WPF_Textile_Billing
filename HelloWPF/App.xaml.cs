@@ -66,9 +66,10 @@ namespace HelloWPF
 
                     string licenseMac = licenseObject.GetValueOrDefault("macAddress");
                     DateTime licenseDate = DateTime.ParseExact(licenseObject.GetValueOrDefault("expirationDate"),
-                                            "dd/M/yyyy", System.Globalization.CultureInfo.InvariantCulture);
+                                            "dd/M/yyyy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
 
                     expirationDate = licenseObject.GetValueOrDefault("expirationDate");
+                    bool b = DateTime.Now <= licenseDate;
 
                     return (licenseMac.Equals(macAddr) && DateTime.Now <= licenseDate);
                 }
