@@ -20,12 +20,12 @@ namespace HelloWPF
 
             if (App.validateLicenseFile(App.licensePath))
             {
-                DateTime expirationDate = DateTime.ParseExact(App.expirationDate, "dd/M/yyyy HH:mm:ss", 
+                DateTime expirationDate = DateTime.ParseExact(App.expirationDate, "dd/M/yyyy HH:mm:ss",
                                             System.Globalization.CultureInfo.InvariantCulture);
                 double daysLeft = Math.Ceiling((expirationDate - DateTime.Now).TotalDays);
                 if (daysLeft == 10 || daysLeft == 5 || daysLeft == 3 || daysLeft == 1)
                 {
-                    MessageBox.Show("Your license file expires in "+ daysLeft + " day(s).\nPlease Contact admin @8870395228", "Reminder",
+                    MessageBox.Show("Your license file expires in " + daysLeft + " day(s).\nPlease Contact admin @8870395228 or support@thinkers-hut.com", "Reminder",
                                                             MessageBoxButton.OK, MessageBoxImage.Warning);
                 }
                 this.WindowState = WindowState.Maximized;

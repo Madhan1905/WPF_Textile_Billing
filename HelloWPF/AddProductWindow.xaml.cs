@@ -38,6 +38,34 @@ namespace HelloWPF
             }
         }
 
+        private void texboxFocusedEvent(object sender, RoutedEventArgs e)
+        {
+            if (barcode.IsFocused)
+            {
+                barcode.SelectAll();
+            }
+            if (name.IsFocused)
+            {
+                name.SelectAll();
+            }
+            if (printName.IsFocused)
+            {
+                printName.SelectAll();
+            }
+            if (cost.IsFocused)
+            {
+                cost.SelectAll();
+            }
+            if (mrp.IsFocused)
+            {
+                mrp.SelectAll();
+            }
+            if (stock.IsFocused)
+            {
+                stock.SelectAll();
+            }
+        }
+
         private void submitButtonEvent(Object sender, RoutedEventArgs e)
         {
             submitData();

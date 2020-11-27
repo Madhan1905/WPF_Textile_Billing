@@ -63,22 +63,28 @@
             </Grid>
 
             <Grid Grid.Column="2" Grid.Row="0">
-                <TextBox x:Name="barcode" Grid.Row="1" Height="30" FontSize="15" FontWeight="Regular" VerticalContentAlignment="Center" PreviewTextInput="NumberValidationEvent"/>
+                <TextBox x:Name="barcode" Grid.Row="1" Height="30" FontSize="15" FontWeight="Regular" 
+                         VerticalContentAlignment="Center" PreviewTextInput="NumberValidationEvent" GotKeyboardFocus="texboxFocusedEvent" GotMouseCapture="texboxFocusedEvent"/>
             </Grid>
             <Grid Grid.Column="2" Grid.Row="1" VerticalAlignment="Center">
-                <TextBox x:Name="name" Grid.Row="1" Height="30" FontSize="15" FontWeight="Regular" VerticalContentAlignment="Center"/>
+                <TextBox x:Name="name" Grid.Row="1" Height="30" FontSize="15" FontWeight="Regular" 
+                         VerticalContentAlignment="Center" GotKeyboardFocus="texboxFocusedEvent" GotMouseCapture="texboxFocusedEvent"/>
             </Grid>
             <Grid Grid.Column="2" Grid.Row="2" VerticalAlignment="Center">
-                <TextBox x:Name="printName" Grid.Row="1" Height="30" FontSize="15" FontWeight="Regular" VerticalContentAlignment="Center"/>
+                <TextBox x:Name="printName" Grid.Row="1" Height="30" FontSize="15" FontWeight="Regular" 
+                         VerticalContentAlignment="Center" GotKeyboardFocus="texboxFocusedEvent" GotMouseCapture="texboxFocusedEvent"/>
             </Grid>
             <Grid Grid.Column="2" Grid.Row="3" VerticalAlignment="Center">
-                <TextBox x:Name="cost" Grid.Row="1" Height="30" FontSize="15" FontWeight="Regular" VerticalContentAlignment="Center" PreviewTextInput="NumberValidationEvent"/>
+                <TextBox x:Name="cost" Grid.Row="1" Height="30" FontSize="15" FontWeight="Regular" 
+                         VerticalContentAlignment="Center" PreviewTextInput="NumberValidationEvent" GotKeyboardFocus="texboxFocusedEvent" GotMouseCapture="texboxFocusedEvent"/>
             </Grid>
             <Grid Grid.Column="2" Grid.Row="4" VerticalAlignment="Center">
-                <TextBox x:Name="mrp" Grid.Row="1" Height="30" FontSize="15" FontWeight="Regular" VerticalContentAlignment="Center" PreviewTextInput="NumberValidationEvent"/>
+                <TextBox x:Name="mrp" Grid.Row="1" Height="30" FontSize="15" FontWeight="Regular" 
+                         VerticalContentAlignment="Center" PreviewTextInput="NumberValidationEvent" GotKeyboardFocus="texboxFocusedEvent" GotMouseCapture="texboxFocusedEvent"/>
             </Grid>
             <Grid Grid.Column="2" Grid.Row="5" VerticalAlignment="Center">
-                <TextBox x:Name="stock" Grid.Row="1" Height="30" FontSize="15" FontWeight="Regular" VerticalContentAlignment="Center" PreviewTextInput="NumberValidationEvent"/>
+                <TextBox x:Name="stock" Grid.Row="1" Height="30" FontSize="15" FontWeight="Regular" 
+                         VerticalContentAlignment="Center" PreviewTextInput="NumberValidationEvent" GotKeyboardFocus="texboxFocusedEvent" GotMouseCapture="texboxFocusedEvent"/>
             </Grid>
         </Grid>
 

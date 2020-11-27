@@ -26,6 +26,7 @@ namespace HelloWPF
         private bool editing;
         private bool editMode;
         private bool popupComplete;
+        private bool endReached;
         public BillingControl(Invoice invoice, ContentControl WindowControl,bool editBill)
         {
             InitializeComponent();
@@ -43,6 +44,7 @@ namespace HelloWPF
 
             billTable.CellEditEnding += billTableCellEditEvent;
             billTable.PreviewTextInput += NumberValidationEvent;
+            //billTable.CurrentCellChanged += billTableBeginInit;
 
             if (invoice.BillingProducts != null)
             {
@@ -82,23 +84,55 @@ namespace HelloWPF
         private void billTableTextChangeEvent(object sender, TextChangedEventArgs e)
         {
             var el = e.OriginalSource as TextBox;
-            if (!el.Text.Equals("") && !popupComplete)
+            string columnSelected = billTable.CurrentColumn.Header as string;
+
+            if (columnSelected.Equals("Name"))
             {
-                using (SQLiteConnection dbConnection = new SQLiteConnection(App.productDatabasePath))
+                if (!el.Text.Equals("") && !popupComplete)
                 {
-                    List<Product> items = dbConnection.Table<Product>().ToList()
-                                            .FindAll(prod => prod.Name.ToUpper().StartsWith(el.Text.ToUpper()));
-                    products_list.ItemsSource = items;
-                    products_list.SelectedIndex = 0;
-                    productPopup.IsOpen = true;
+                    using (SQLiteConnection dbConnection = new SQLiteConnection(App.productDatabasePath))
+                    {
+                        List<Product> items = dbConnection.Table<Product>().ToList()
+                                                .FindAll(prod => prod.Name.ToUpper().StartsWith(el.Text.ToUpper()));
+                        products_list.ItemsSource = items;
+                        products_list.SelectedIndex = 0;
+                        productPopup.IsOpen = true;
+                    }
                 }
-            } else
-            {
-                productPopup.IsOpen = false;
+                else
+                {
+                    products_list.SelectedIndex = -1;
+                    productPopup.IsOpen = false;
+                }
             }
+
             popupComplete = false;
-            
+
+            if (el.Text.Equals(""))
+            {
+                endReached = true;
+            }
+
         }
+
+        private void billTableGenericTextChangeEvent(object sender, TextChangedEventArgs e)
+        {
+            var el = e.OriginalSource as TextBox;
+            if (el.Text.Equals(""))
+            {
+                endReached = true;
+            }
+            else
+            {
+                endReached = false;
+            }
+        }
+
+        //private void billTableBeginInit(object sender, EventArgs e)
+        //{
+        //    endReached = true;
+        //    billTable.BeginEdit();
+        //}
 
         private void billTableBeginEditing(object sender, DataGridBeginningEditEventArgs e)
         {
@@ -141,9 +175,9 @@ namespace HelloWPF
                 } else if (e.Column.Header.Equals("Qty."))
                 {
                     var el = e.EditingElement as TextBox;
-                    if (!el.Text.Equals("") && int.TryParse(el.Text,out _))
+                    BillingProduct product = (BillingProduct)billTable.SelectedItem;
+                    if (!el.Text.Equals("") && int.TryParse(el.Text,out _) && product.Barcode != null)
                     {
-                        BillingProduct product = (BillingProduct)billTable.SelectedItem;
                         product.Quantity = int.Parse(el.Text);
                         product.Total = product.Quantity * product.MRP;
 
@@ -180,8 +214,18 @@ namespace HelloWPF
                         queryProducts.Add(selectedProduct);
                         el.Text = selectedProduct.Name;
                         handleProductCommit(product, queryProducts, el);
+                    } else
+                    {
+                        billTable.CellEditEnding -= billTableCellEditEvent;
+                        billTable.CancelEdit();
+                        billTable.CancelEdit();
+                        billTable.Items.Refresh();
+                        billTable.CellEditEnding += billTableCellEditEvent;
                     }
                 }
+            } else
+            {
+                popupComplete = true;
             }
         }
 
@@ -419,7 +463,7 @@ namespace HelloWPF
                         break;
                     case Key.Down:
                         selectedIndex = products_list.SelectedIndex;
-                        if(selectedIndex < products_list.Items.Count)
+                        if(selectedIndex != -1 && selectedIndex < products_list.Items.Count)
                         {
                             products_list.SelectedIndex = selectedIndex + 1;
                             products_list.ScrollIntoView(products_list.Items[selectedIndex]);
@@ -455,9 +499,9 @@ namespace HelloWPF
 
         private void switchCells(KeyEventArgs e, Key key)
         {
+            string columnSelected = billTable.CurrentColumn.Header as string;
             if (!editMode)
             {
-                string columnSelected = billTable.CurrentColumn.Header as string;
                 if (key == Key.Enter)
                 {
                     switch (columnSelected)
@@ -467,33 +511,42 @@ namespace HelloWPF
                             e.Handled = true;
                             break;
                         case "Name":
+                            int selectedIndex = billTable.SelectedIndex;
+                            if (selectedIndex == billTable.Items.Count - 1)
+                            {
+                                discountText.Focus();
+                            }
                             billTable.CurrentColumn = billTable.Columns[0];
+                            //e.Handled = true;
                             break;
                         case "Qty.":
                             billTable.CurrentColumn = billTable.Columns[0];
-                            break;
-                    }
-                } else
-                {
-                    switch (columnSelected)
-                    {
-                        case "Barcode":
-                            int selectedIndex = billTable.SelectedIndex == 0 ? 0 : billTable.SelectedIndex - 1;
-                            billTable.SelectedIndex = selectedIndex;
-                            billTable.CurrentCell = new DataGridCellInfo(billTable.Items[selectedIndex], billTable.Columns[2]);
-                            e.Handled = true;
-                            break;
-                        case "Name":
-                            billTable.CurrentColumn = billTable.Columns[0];
-                            e.Handled = true;
-                            break;
-                        case "Qty.":
-                            billTable.CurrentColumn = billTable.Columns[1];
-                            e.Handled = true;
                             break;
                     }
                 }
-                
+            }
+            if(key == Key.Back && (!editMode || (editMode && endReached)))
+            {
+                switch (columnSelected)
+                {
+                    case "Barcode":
+                        int selectedIndex = billTable.SelectedIndex == 0 ? 0 : billTable.SelectedIndex - 1;
+                        billTable.SelectedIndex = selectedIndex;
+                        billTable.CurrentCell = new DataGridCellInfo(billTable.Items[selectedIndex], billTable.Columns[2]);
+                        e.Handled = true;
+                        break;
+                    case "Name":
+                        billTable.CurrentColumn = billTable.Columns[0];
+                        popupComplete = true;
+                        e.Handled = true;
+                        break;
+                    case "Qty.":
+                        billTable.CurrentColumn = billTable.Columns[1];
+                        popupComplete = true;
+                        endReached = false;
+                        e.Handled = true;
+                        break;
+                }
             }
         }
 
@@ -516,6 +569,28 @@ namespace HelloWPF
                 int sum = products.Sum(product => product.Total);
                 grandTotalText.Text = formatTotal(sum);
             }
+        }
+
+        private void discountKeyEvent(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Back && discountText.Text.Equals(""))
+            {
+                int lastIndex = billTable.Items.Count - 1;
+                billTable.SelectedIndex = lastIndex;
+                billTable.CurrentCell = new DataGridCellInfo(billTable.Items[lastIndex], billTable.Columns[0]);
+                endReached = true;
+                billTable.BeginEdit();
+            }
+        }
+
+        private void discountFocusedEvent(object sender, EventArgs e)
+        {
+            discountText.Background = Brushes.Yellow;
+        }
+
+        private void discountLostFocusEvent(object sender, EventArgs e)
+        {
+            discountText.Background = Brushes.White;
         }
     }
 }
