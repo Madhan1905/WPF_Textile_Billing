@@ -1,5 +1,5 @@
 ﻿using HelloWPF.Classes;
-using SQLite;
+using MongoDB.Driver;
 using System;
 using System.ComponentModel;
 using System.IO;
@@ -18,16 +18,16 @@ namespace HelloWPF
         {
             InitializeComponent();
 
-            if (App.validateLicenseFile(App.licensePath))
+            if (true)
             {
-                DateTime expirationDate = DateTime.ParseExact(App.expirationDate, "dd/M/yyyy HH:mm:ss",
-                                            System.Globalization.CultureInfo.InvariantCulture);
-                double daysLeft = Math.Ceiling((expirationDate - DateTime.Now).TotalDays);
-                if (daysLeft == 10 || daysLeft == 5 || daysLeft == 3 || daysLeft == 1)
-                {
-                    MessageBox.Show("Your license file expires in " + daysLeft + " day(s).\nPlease Contact admin @8870395228 or support@thinkers-hut.com", "Reminder",
-                                                            MessageBoxButton.OK, MessageBoxImage.Warning);
-                }
+                //DateTime expirationDate = DateTime.ParseExact(App.expirationDate, "dd/M/yyyy HH:mm:ss",
+                //                            System.Globalization.CultureInfo.InvariantCulture);
+                //double daysLeft = Math.Ceiling((expirationDate - DateTime.Now).TotalDays);
+                //if (daysLeft == 10 || daysLeft == 5 || daysLeft == 3 || daysLeft == 1)
+                //{
+                //    MessageBox.Show("Your license file expires in " + daysLeft + " day(s).\nPlease Contact admin @8870395228 or support@thinkers-hut.com", "Reminder",
+                //                                            MessageBoxButton.OK, MessageBoxImage.Warning);
+                //}
                 this.WindowState = WindowState.Maximized;
                 footer_grid.Visibility = Visibility.Visible;
                 MainWindowControl.Content = new HomeControl(MainWindowControl);
@@ -56,25 +56,23 @@ namespace HelloWPF
             {
                 case Key.F2:
                     Invoice invoice;
-                    using (SQLiteConnection dbConnection = new SQLiteConnection(App.productDatabasePath))
+                    MongoClient dbClient = new MongoClient("mongodb://Thinkershut:Dev123@127.0.0.1:27017?authSource=tutorial&readPreference=primary&appname=MongoDB%20Compass&ssl=false");
+                    try
                     {
-                        try
+                        if (App.currentInvoice != null)
                         {
-                            if (App.currentInvoice != null)
-                            {
-                                invoice = App.currentInvoice;
-                            }
-                            else
-                            {
-                                invoice = new Invoice() { Date = DateTime.Now.ToString("dd/M/yyyy") };
-                                App.currentInvoice = invoice;
-                            }
-                            MainWindowControl.Content = new BillingControl(invoice, MainWindowControl,false);
+                            invoice = App.currentInvoice;
                         }
-                        catch (Exception ex)
+                        else
                         {
-                            Console.WriteLine(ex.Message);
+                            invoice = new Invoice() { Date = DateTime.Now.ToString("dd/M/yyyy") };
+                            App.currentInvoice = invoice;
                         }
+                        MainWindowControl.Content = new BillingControl(invoice, MainWindowControl, false);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
                     }
                     MainWindowControl.Content = new BillingControl(App.currentInvoice, MainWindowControl,false);
                     break;
@@ -103,8 +101,17 @@ namespace HelloWPF
                 case Key.Insert:
                     if(MainWindowControl.Content is ViewItemsControl)
                     {
+                        Product product = new Product()
+                        {
+                            Barcode = "",
+                            Name = "",
+                            SellingPrice = "",
+                            Cost = "",
+                            MRP = "",
+                            stock = 0,
+                        };
                         ViewItemsControl control = MainWindowControl.Content as ViewItemsControl;
-                        control.addData();
+                        control.AdminControl.Content = new AddItemsControl(product);
                     }
                     break;
             }

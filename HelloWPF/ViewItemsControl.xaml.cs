@@ -1,5 +1,4 @@
 ﻿using HelloWPF.Classes;
-using SQLite;
 using System;
 using System.Collections.Generic;
 using System.Windows;
@@ -29,16 +28,21 @@ namespace HelloWPF
 
         private void itemsButtonEvent(Object Sender, RoutedEventArgs e)
         {
-            AdminControl.Content = new TextileApp.ItemsControl();
+            AdminControl.Content = new TextileApp.ItemsControl(AdminControl);
         }
 
-        public void addData()
+        private void addButtonEvent(Object Sender, RoutedEventArgs e)
         {
-            if (AdminControl.Content is TextileApp.ItemsControl)
+            Product product = new Product()
             {
-                TextileApp.ItemsControl control = AdminControl.Content as TextileApp.ItemsControl;
-                control.addData();
-            }
+                Barcode = "",
+                Name = "",
+                SellingPrice = "",
+                Cost = "",
+                MRP = "",
+                stock = 0,
+            };
+            AdminControl.Content = new TextileApp.AddItemsControl(product);
         }
     }
 }

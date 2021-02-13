@@ -38,6 +38,14 @@
       "frameworks": {
         "netcoreapp3.1": {
           "dependencies": {
+            "MongoDB.Bson": {
+              "target": "Package",
+              "version": "[2.11.5, )"
+            },
+            "MongoDB.Driver": {
+              "target": "Package",
+              "version": "[2.11.5, )"
+            },
             "sqlite-net-pcl": {
               "target": "Package",
               "version": "[1.7.335, )"

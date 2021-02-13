@@ -114,7 +114,7 @@
                         <GridView ColumnHeaderContainerStyle="{StaticResource myHeaderStyle}">
                             <GridViewColumn x:Name="barcode_column" Width="120" DisplayMemberBinding="{Binding Barcode}" />
                             <GridViewColumn x:Name="name_column" Width="50" DisplayMemberBinding="{Binding Name}" />
-                            <GridViewColumn x:Name="cost_column" Width="150" DisplayMemberBinding="{Binding Cost}" />
+                            <GridViewColumn x:Name="cost_column" Width="150" DisplayMemberBinding="{Binding MRP}" />
                         </GridView>
                     </ListView.View>
                 </ListView>

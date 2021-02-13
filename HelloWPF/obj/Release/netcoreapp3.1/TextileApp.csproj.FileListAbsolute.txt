@@ -114,3 +114,14 @@ F:\Madhan\Workspaces\C#\WPF_Textile_Billing\HelloWPF\obj\Release\netcoreapp3.1\T
 F:\Madhan\Workspaces\C#\WPF_Textile_Billing\HelloWPF\obj\Release\netcoreapp3.1\TextileApp.dll
 F:\Madhan\Workspaces\C#\WPF_Textile_Billing\HelloWPF\obj\Release\netcoreapp3.1\TextileApp.pdb
 F:\Madhan\Workspaces\C#\WPF_Textile_Billing\HelloWPF\obj\Release\netcoreapp3.1\TextileApp.genruntimeconfig.cache
+F:\Madhan\Workspaces\C#\WPF_Textile_Billing\HelloWPF\bin\Release\netcoreapp3.1\DnsClient.dll
+F:\Madhan\Workspaces\C#\WPF_Textile_Billing\HelloWPF\bin\Release\netcoreapp3.1\MongoDB.Bson.dll
+F:\Madhan\Workspaces\C#\WPF_Textile_Billing\HelloWPF\bin\Release\netcoreapp3.1\MongoDB.Driver.dll
+F:\Madhan\Workspaces\C#\WPF_Textile_Billing\HelloWPF\bin\Release\netcoreapp3.1\MongoDB.Driver.Core.dll
+F:\Madhan\Workspaces\C#\WPF_Textile_Billing\HelloWPF\bin\Release\netcoreapp3.1\MongoDB.Libmongocrypt.dll
+F:\Madhan\Workspaces\C#\WPF_Textile_Billing\HelloWPF\bin\Release\netcoreapp3.1\SharpCompress.dll
+F:\Madhan\Workspaces\C#\WPF_Textile_Billing\HelloWPF\bin\Release\netcoreapp3.1\runtimes\win\native\libzstd.dll
+F:\Madhan\Workspaces\C#\WPF_Textile_Billing\HelloWPF\bin\Release\netcoreapp3.1\runtimes\win\native\snappy32.dll
+F:\Madhan\Workspaces\C#\WPF_Textile_Billing\HelloWPF\bin\Release\netcoreapp3.1\runtimes\win\native\snappy64.dll
+F:\Madhan\Workspaces\C#\WPF_Textile_Billing\HelloWPF\obj\Release\netcoreapp3.1\AddItemsControl.g.cs
+F:\Madhan\Workspaces\C#\WPF_Textile_Billing\HelloWPF\obj\Release\netcoreapp3.1\AddItemsControl.baml

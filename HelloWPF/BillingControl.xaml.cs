@@ -1,5 +1,6 @@
 ﻿using HelloWPF.Classes;
-using SQLite;
+using MongoDB.Bson;
+using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -37,10 +38,15 @@ namespace HelloWPF
             this.MainWindowControl = WindowControl;
 
             dateTextBox.Text = DateTime.Now.ToString("dd/M/yyyy");
-            using (SQLiteConnection dbConnection = new SQLiteConnection(App.productDatabasePath))
+            MongoClient dbClient = new MongoClient("mongodb://Thinkershut:Dev123@localhost:27017/?authSource=admin&readPreference=primary&appname=MongoDB%20Compass&ssl=false");
+            var database = dbClient.GetDatabase("main_db");
+            List<String> names = database.ListCollectionNames().ToList<String>();
+            if (!names.Contains("Invoices"))
             {
-                invoiceTextBox.Text = (dbConnection.Table<Invoice>().Count()+1).ToString();
+                database.CreateCollection("Invoices");
             }
+            var collection = database.GetCollection<Invoice>("Invoices");
+            invoiceTextBox.Text = (collection.CountDocuments(new BsonDocument()) + 1).ToString();
 
             billTable.CellEditEnding += billTableCellEditEvent;
             billTable.PreviewTextInput += NumberValidationEvent;
@@ -90,14 +96,19 @@ namespace HelloWPF
             {
                 if (!el.Text.Equals("") && !popupComplete)
                 {
-                    using (SQLiteConnection dbConnection = new SQLiteConnection(App.productDatabasePath))
+                    MongoClient dbClient = new MongoClient("mongodb://Thinkershut:Dev123@localhost:27017/?authSource=admin&readPreference=primary&appname=MongoDB%20Compass&ssl=false");
+                    var database = dbClient.GetDatabase("main_db");
+                    List<String> names = database.ListCollectionNames().ToList<String>();
+                    if (!names.Contains("Products"))
                     {
-                        List<Product> items = dbConnection.Table<Product>().ToList()
-                                                .FindAll(prod => prod.Name.ToUpper().StartsWith(el.Text.ToUpper()));
-                        products_list.ItemsSource = items;
-                        products_list.SelectedIndex = 0;
-                        productPopup.IsOpen = true;
+                        database.CreateCollection("Products");
                     }
+                    var collection = database.GetCollection<Product>("Products");
+                    List<Product> items = collection.Find<Product>(new BsonDocument()).ToList<Product>()
+                                                .FindAll(prod => prod.Name.ToUpper().StartsWith(el.Text.ToUpper()));
+                    products_list.ItemsSource = items;
+                    products_list.SelectedIndex = 0;
+                    productPopup.IsOpen = true;
                 }
                 else
                 {
@@ -152,24 +163,29 @@ namespace HelloWPF
             {
                 if (e.Column.Header.Equals("Barcode"))
                 {
-                    using (SQLiteConnection dbConnection = new SQLiteConnection(App.productDatabasePath))
+                    MongoClient dbClient = new MongoClient("mongodb://Thinkershut:Dev123@localhost:27017/?authSource=admin&readPreference=primary&appname=MongoDB%20Compass&ssl=false");
+                    var database = dbClient.GetDatabase("main_db");
+                    List<String> names = database.ListCollectionNames().ToList<String>();
+                    if (!names.Contains("Products"))
                     {
-                        var el = e.EditingElement as TextBox;
-                        if (!el.Text.Equals(""))
-                        {
-                            var sql_cmd = dbConnection.CreateCommand("SELECT * FROM 'Product' WHERE Barcode=='" + el.Text +"'");
-                            List<Product> queryProducts = sql_cmd.ExecuteQuery<Product>();
+                        database.CreateCollection("Products");
+                    }
+                    var collection = database.GetCollection<Product>("Products");
+                    var el = e.EditingElement as TextBox;
+                    if (!el.Text.Equals(""))
+                    {
+                        Product queryProduct = collection.Find(Builders<Product>.Filter.Eq("_id", el.Text)).FirstOrDefault();
 
-                            BillingProduct product = (BillingProduct)billTable.SelectedItem;
-                            handleProductCommit(product, queryProducts, el);
-                        } else
-                        {
-                            billTable.CellEditEnding -= billTableCellEditEvent;
-                            billTable.CancelEdit();
-                            billTable.CancelEdit();
-                            billTable.Items.Refresh();
-                            billTable.CellEditEnding += billTableCellEditEvent;
-                        }
+                        BillingProduct product = (BillingProduct)billTable.SelectedItem;
+                        handleProductCommit(product, queryProduct, el);
+                    }
+                    else
+                    {
+                        billTable.CellEditEnding -= billTableCellEditEvent;
+                        billTable.CancelEdit();
+                        billTable.CancelEdit();
+                        billTable.Items.Refresh();
+                        billTable.CellEditEnding += billTableCellEditEvent;
                     }
                     editMode = false;
                 } else if (e.Column.Header.Equals("Qty."))
@@ -207,13 +223,11 @@ namespace HelloWPF
                     popupComplete = true;
                     var el = e.EditingElement as TextBox;
                     BillingProduct product = (BillingProduct)billTable.SelectedItem;
-                    List<Product> queryProducts = new List<Product>();
                     if(products_list.SelectedIndex != -1)
                     {
                         Product selectedProduct = products_list.SelectedItem as Product;
-                        queryProducts.Add(selectedProduct);
                         el.Text = selectedProduct.Name;
-                        handleProductCommit(product, queryProducts, el);
+                        handleProductCommit(product, selectedProduct, el);
                     } else
                     {
                         billTable.CellEditEnding -= billTableCellEditEvent;
@@ -229,24 +243,24 @@ namespace HelloWPF
             }
         }
 
-        private void handleProductCommit(BillingProduct product, List<Product> queryProducts, TextBox el)
+        private void handleProductCommit(BillingProduct product, Product queryProduct, TextBox el)
         {
-            if (queryProducts.Count > 0)
+            if (queryProduct != null )
             {
                 List<BillingProduct> availableProducts = new List<BillingProduct>();
                 if (invoice.BillingProducts != null)
                 {
                     availableProducts = JsonSerializer.Deserialize<List<BillingProduct>>(invoice.BillingProducts);
                 }
-                if (availableProducts.Find(prod => prod.Barcode == queryProducts[0].Barcode) != null)
+                if (availableProducts.Find(prod => prod.Barcode == queryProduct.Barcode) != null)
                 {
                     MessageBoxResult result = MessageBox.Show("Add Duplicate product?", "Confirmation",
                                                             MessageBoxButton.YesNo, MessageBoxImage.Question);
                     if (result == MessageBoxResult.Yes)
                     {
-                        BillingProduct billingProduct = products.Find(prod => prod.Barcode == queryProducts[0].Barcode);
+                        BillingProduct billingProduct = products.Find(prod => prod.Barcode == queryProduct.Barcode);
                         billingProduct.Quantity = billingProduct.Quantity + 1;
-                        billingProduct.Total = int.Parse(queryProducts[0].MRP) * billingProduct.Quantity;
+                        billingProduct.Total = int.Parse(queryProduct.MRP) * billingProduct.Quantity;
 
                         int discount = discountText.Text == "" ? 0 : int.Parse(discountText.Text);
                         int sum = products.Sum(product => product.Total);
@@ -269,7 +283,7 @@ namespace HelloWPF
                 }
                 else
                 {
-                    addProduct(product, queryProducts, el);
+                    addProduct(product, queryProduct, el);
                 }
             }
             else
@@ -283,14 +297,14 @@ namespace HelloWPF
             }
         }
 
-        private void addProduct(BillingProduct product,List<Product> queryProducts, TextBox el)
+        private void addProduct(BillingProduct product,Product queryProduct, TextBox el)
         {
-            product.Barcode = queryProducts[0].Barcode;
-            product.Name = queryProducts[0].Name;
-            product.PrintName = queryProducts[0].PrintName;
-            product.MRP = int.Parse(queryProducts[0].MRP);
+            product.Barcode = queryProduct.Barcode;
+            product.Name = queryProduct.Name;
+            product.PrintName = queryProduct.PrintName;
+            product.MRP = int.Parse(queryProduct.MRP);
             product.Quantity = 1;
-            product.Total = int.Parse(queryProducts[0].MRP);
+            product.Total = int.Parse(queryProduct.MRP);
             product.Serial = products.IndexOf(product) + 1;
 
             int sum = products.Sum(product => product.Total);
@@ -350,33 +364,45 @@ namespace HelloWPF
                 invoice.Total = (sum - int.Parse(invoice.Discount)).ToString();
                 invoice.BillingProducts = JsonSerializer.Serialize<List<BillingProduct>>(products);
 
-                using (SQLiteConnection dbConnection = new SQLiteConnection(App.productDatabasePath))
+                MongoClient dbClient = new MongoClient("mongodb://Thinkershut:Dev123@localhost:27017/?authSource=admin&readPreference=primary&appname=MongoDB%20Compass&ssl=false");
+                var database = dbClient.GetDatabase("main_db");
+                List<String> names = database.ListCollectionNames().ToList<String>();
+                if (!names.Contains("Invoices"))
                 {
-                    try
+                    database.CreateCollection("Invoices");
+                }
+                var collection = database.GetCollection<Invoice>("Invoices");
+                try
+                {
+                    if (editing)
                     {
-                        dbConnection.CreateTable<Invoice>();
-                        if (editing)
-                        {
-                            dbConnection.Update(invoice);
-                        } else
-                        {
-                            dbConnection.Insert(invoice);
-                        }
-                        App.currentInvoice = null;
+                        var filter = Builders<Invoice>.Filter.Eq(i => i.Number, invoice.Number);
+                        collection.ReplaceOne(filter,invoice);
+                    }
+                    else
+                    {
+                        invoice.Number = collection.CountDocuments(new BsonDocument()) + 1;
+                        collection.InsertOne(invoice);
+                    }
+                    App.currentInvoice = null;
 
-                        dbConnection.CreateTable<Product>();
-                        List<Product> existingProducts = dbConnection.Table<Product>().ToList();
-                        foreach(BillingProduct billingProduct in products)
-                        {
-                            Product product = existingProducts.Find(prod => prod.Barcode.Equals(billingProduct.Barcode));
-                            product.stock = product.stock - billingProduct.Quantity;
-                            dbConnection.Update(product);
-                        }
-                    }
-                    catch (Exception ex)
+                    if (!names.Contains("Products"))
                     {
-                        Console.WriteLine(ex.Message);
+                        database.CreateCollection("Products");
                     }
+                    var productCollection = database.GetCollection<Product>("Products");
+                    List<Product> existingProducts = productCollection.Find<Product>(new BsonDocument()).ToList<Product>();
+                    foreach (BillingProduct billingProduct in products)
+                    {
+                        Product product = existingProducts.Find(prod => prod.Barcode.Equals(billingProduct.Barcode));
+                        product.stock = product.stock - billingProduct.Quantity;
+                        var filter = Builders<Product>.Filter.Eq(p => p.Barcode, billingProduct.Barcode);
+                        productCollection.ReplaceOne(filter,product);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
                 }
 
                 MessageBoxResult result = MessageBox.Show("Do you want to print?", "Confirmation", MessageBoxButton.YesNo);
@@ -388,19 +414,16 @@ namespace HelloWPF
                     case MessageBoxResult.No: break;
                 }
 
-                using (SQLiteConnection dbConnection = new SQLiteConnection(App.productDatabasePath))
+                try
                 {
-                    try
-                    {
-                        invoice = new Invoice() { Date = DateTime.Now.ToString("dd/M/yyyy") };
-                        App.currentInvoice = invoice;
-                        invoice.Number = dbConnection.Table<Product>().Count() + 1;
-                        MainWindowControl.Content = new BillingControl(invoice, MainWindowControl,false);
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine(ex.Message);
-                    }
+                    invoice = new Invoice() { Date = DateTime.Now.ToString("dd/M/yyyy") };
+                    App.currentInvoice = invoice;
+                    invoice.Number = collection.CountDocuments(new BsonDocument()) + 1;
+                    MainWindowControl.Content = new BillingControl(invoice, MainWindowControl, false);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
                 }
                 MainWindowControl.Content = new BillingControl(App.currentInvoice, MainWindowControl,false);
             }        

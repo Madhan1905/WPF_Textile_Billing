@@ -1,13 +1,15 @@
-﻿using SQLite;
-using System;
+﻿using System;
+using MongoDB.Bson;
 using System.Collections.Generic;
 using System.Text;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace HelloWPF.Classes
 {
     public class Product
     {
-        [PrimaryKey]
+        //public ObjectId id { get; set; }
+        [BsonId]
         public String Barcode { get; set; }
         public String Name { get; set; }
         public String PrintName { get; set; }

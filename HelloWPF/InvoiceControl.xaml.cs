@@ -1,5 +1,6 @@
 ﻿using HelloWPF.Classes;
-using SQLite;
+using MongoDB.Driver;
+using MongoDB.Bson;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -31,13 +32,17 @@ namespace HelloWPF
         private void populateInvoiceTable(string date)
         {
             List<Invoice> invoices = new List<Invoice>();
-            using (SQLiteConnection dbConnection = new SQLiteConnection(App.productDatabasePath))
+            MongoClient dbClient = new MongoClient("mongodb://Thinkershut:Dev123@localhost:27017/?authSource=admin&readPreference=primary&appname=MongoDB%20Compass&ssl=false");
+            var database = dbClient.GetDatabase("main_db");
+            List<String> names = database.ListCollectionNames().ToList<String>();
+            if (!names.Contains("Invoices"))
             {
-                dbConnection.CreateTable<Invoice>();
-                invoices = dbConnection.Table<Invoice>().ToList();
-                var sql_cmd = dbConnection.CreateCommand("SELECT * FROM 'Invoice' WHERE Date=='"+date+"'");
-                invoices = sql_cmd.ExecuteQuery<Invoice>();
+                database.CreateCollection("Invoices");
             }
+            var collection = database.GetCollection<Invoice>("Invoices");
+            var filter = Builders<Invoice>.Filter.Eq(i => i.Date, date);
+            invoices = collection.Find<Invoice>(filter).Limit(15).ToList<Invoice>();
+
             invoiceTable.ItemsSource = invoices;
             invoiceTable.Items.Refresh();
         }
@@ -82,23 +87,27 @@ namespace HelloWPF
             Invoice invoice = invoiceTable.SelectedItem as Invoice;
             if (invoice != null)
             {
-                using (SQLiteConnection dbConnection = new SQLiteConnection(App.productDatabasePath))
+                MongoClient dbClient = new MongoClient("mongodb://Thinkershut:Dev123@localhost:27017/?authSource=admin&readPreference=primary&appname=MongoDB%20Compass&ssl=false");
+                var database = dbClient.GetDatabase("main_db");
+                List<String> names = database.ListCollectionNames().ToList<String>();
+                if (!names.Contains("Invoices"))
                 {
-                    try
-                    {
-                        dbConnection.CreateTable<Invoice>();
-                        dbConnection.Delete(invoice);
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine(ex.Message);
-                    }
-                    finally
-                    {
-                        List<Invoice> invoices = invoiceTable.ItemsSource as List<Invoice>;
-                        invoices.Remove(invoice);
-                        invoiceTable.Items.Refresh();
-                    }
+                    database.CreateCollection("Invoices");
+                }
+                var collection = database.GetCollection<Invoice>("Invoices");
+                try
+                {
+                    collection.DeleteOne(invoice.ToBsonDocument());
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+                finally
+                {
+                    List<Invoice> invoices = invoiceTable.ItemsSource as List<Invoice>;
+                    invoices.Remove(invoice);
+                    invoiceTable.Items.Refresh();
                 }
             }
         }

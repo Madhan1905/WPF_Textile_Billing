@@ -7,9 +7,14 @@
     <ApplicationIcon>boys_world_jpg_8M5_icon.ico</ApplicationIcon>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+  </PropertyGroup>
+
   <ItemGroup>
     <None Remove="Images\add.png" />
     <None Remove="Images\add_invoice.png" />
+    <None Remove="Images\add_item.png" />
     <None Remove="Images\blue_abstract.jpg" />
     <None Remove="Images\dashboard.png" />
     <None Remove="Images\delete.png" />
@@ -33,6 +38,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Images\add_invoice.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\add_item.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Images\blue_abstract.jpg">
@@ -90,6 +98,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="MongoDB.Bson" Version="2.11.5" />
+    <PackageReference Include="MongoDB.Driver" Version="2.11.5" />
     <PackageReference Include="sqlite-net-pcl" Version="1.7.335" />
   </ItemGroup>
 

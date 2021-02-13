@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Windows;
 using System.IO;
-using SQLite;
 using HelloWPF.Classes;
 using System.Windows.Input;
 using System.Text.RegularExpressions;
+using MongoDB.Driver;
+using MongoDB.Bson;
+using System.Collections.Generic;
 
 namespace HelloWPF
 {
@@ -89,8 +91,14 @@ namespace HelloWPF
                 submitButton.Visibility = Visibility.Collapsed;
                 createProgress.Visibility = Visibility.Visible;
 
-                Product product = new Product()
+                var product = new Product
                 {
+                    //{ "Barcode",barcode.Text },
+                    //{ "Name",name.Text },
+                    //{ "PrintName",printName.Text },
+                    //{ "Cost",cost.Text },
+                    //{ "MRP",mrp.Text },
+                    //{ "stock",long.Parse(stock.Text) }
                     Barcode = barcode.Text,
                     Name = name.Text,
                     PrintName = printName.Text,
@@ -99,25 +107,30 @@ namespace HelloWPF
                     stock = long.Parse(stock.Text)
                 };
 
-                using (SQLiteConnection dbConnection = new SQLiteConnection(App.productDatabasePath))
+                MongoClient dbClient = new MongoClient("mongodb://Thinkershut:Dev123@localhost:27017/?authSource=admin&readPreference=primary&appname=MongoDB%20Compass&ssl=false");
+                var database = dbClient.GetDatabase("main_db");
+                try
                 {
-                    try
+                    List<String> names = database.ListCollectionNames().ToList<String>();
+                    if (!names.Contains("Products"))
                     {
-                        dbConnection.CreateTable<Product>();
-                        if (submitButton.Content.Equals("Update"))
-                        {
-                            dbConnection.Update(product);
-                        }
-                        else
-                        {
-                            dbConnection.Insert(product);
-                        }
+                        database.CreateCollection("Products");
                     }
-                    catch (Exception ex)
+                    var collection = database.GetCollection<Product>("Products");
+
+                    if (submitButton.Content.Equals("Update"))
                     {
-                        Console.WriteLine(ex.Message);
-                        MessageBox.Show("The Barcode already exists.", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                        //collection.Update(product);
                     }
+                    else
+                    {
+                        collection.InsertOne(product);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    MessageBox.Show("The Barcode already exists.", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
                 }
 
                 Close();

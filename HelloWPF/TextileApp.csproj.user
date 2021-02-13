@@ -9,6 +9,9 @@
     </ApplicationDefinition>
   </ItemGroup>
   <ItemGroup>
+    <Compile Update="AddItemsControl.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="AddProductWindow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -38,6 +41,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Page Update="AddItemsControl.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="AddProductWindow.xaml">
       <SubType>Designer</SubType>
     </Page>

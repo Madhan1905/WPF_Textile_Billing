@@ -1,6 +1,7 @@
 ﻿using HelloWPF;
 using HelloWPF.Classes;
-using SQLite;
+using MongoDB.Bson;
+using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -23,15 +24,21 @@ namespace TextileApp
     {
         List<Product> products;
         int entryCount = 0;
-        public ItemsControl()
+        ContentControl adminControl;
+        public ItemsControl(ContentControl control)
         {
             InitializeComponent();
+            adminControl = control;
 
-            using (SQLiteConnection dbConnection = new SQLiteConnection(App.productDatabasePath))
+            MongoClient dbClient = new MongoClient("mongodb://Thinkershut:Dev123@localhost:27017/?authSource=admin&readPreference=primary&appname=MongoDB%20Compass&ssl=false");
+            var database = dbClient.GetDatabase("main_db");
+            List<String> names = database.ListCollectionNames().ToList<String>();
+            if (!names.Contains("Products"))
             {
-                dbConnection.CreateTable<Product>();
-                products = dbConnection.Table<Product>().Take(15).ToList();
+                database.CreateCollection("Products");
             }
+            var collection = database.GetCollection<Product>("Products");
+            List<Product> products = collection.Find<Product>(new BsonDocument()).Limit(15).ToList<Product>();
             populateTable(products);
         }
 
@@ -103,13 +110,17 @@ namespace TextileApp
             switch (result)
             {
                 case MessageBoxResult.Yes:
-                    using (SQLiteConnection dbConnection = new SQLiteConnection(App.productDatabasePath))
+                    MongoClient dbClient = new MongoClient("mongodb://Thinkershut:Dev123@localhost:27017/?authSource=admin&readPreference=primary&appname=MongoDB%20Compass&ssl=false");
+                    var database = dbClient.GetDatabase("main_db");
+                    List<String> names = database.ListCollectionNames().ToList<String>();
+                    if (!names.Contains("Products"))
                     {
-                        dbConnection.CreateTable<Product>();
-                        dbConnection.Delete(product);
-                        products = dbConnection.Table<Product>().Take(15).ToList();
-                        populateTable(products);
+                        database.CreateCollection("Products");
                     }
+                    var collection = database.GetCollection<Product>("Products");
+                    collection.DeleteOne(product.ToBsonDocument());
+                    products = collection.Find<Product>(new BsonDocument()).Limit(15).ToList<Product>();
+                    populateTable(products);
                     break;
                 case MessageBoxResult.No: break;
             }
@@ -119,15 +130,7 @@ namespace TextileApp
         {
             Button button = (Button)Sender;
             Product product = (Product)button.Tag;
-            AddProductWindow addProductWindow = new AddProductWindow(product);
-            addProductWindow.ShowDialog();
-
-            using (SQLiteConnection dbConnection = new SQLiteConnection(App.productDatabasePath))
-            {
-                dbConnection.CreateTable<Product>();
-                products = dbConnection.Table<Product>().Take(15).ToList();
-            }
-            populateTable(products);
+            adminControl.Content = new AddItemsControl(product);
         }
 
         private void creatTableCell(string value, TableRow row, Boolean border, Boolean isCenter)
@@ -157,11 +160,16 @@ namespace TextileApp
             {
                 if (search_text.Text != "")
                 {
-                    using (SQLiteConnection dbConnection = new SQLiteConnection(App.productDatabasePath))
+                    MongoClient dbClient = new MongoClient("mongodb://Thinkershut:Dev123@localhost:27017/?authSource=admin&readPreference=primary&appname=MongoDB%20Compass&ssl=false");
+                    var database = dbClient.GetDatabase("main_db");
+                    List<String> names = database.ListCollectionNames().ToList<String>();
+                    if (!names.Contains("Products"))
                     {
-                        dbConnection.CreateTable<Product>();
-                        products = dbConnection.Table<Product>().ToList();
+                        database.CreateCollection("Products");
                     }
+                    var collection = database.GetCollection<Product>("Products");
+                    products = collection.Find<Product>(new BsonDocument()).Limit(15).ToList<Product>();
+
                     switch (filter_combo.SelectedIndex)
                     {
                         case 0: products = products.FindAll(prod => prod.Barcode == search_text.Text);
@@ -184,11 +192,16 @@ namespace TextileApp
                 }
                 else
                 {
-                    using (SQLiteConnection dbConnection = new SQLiteConnection(App.productDatabasePath))
+                    MongoClient dbClient = new MongoClient("mongodb://Thinkershut:Dev123@localhost:27017/?authSource=admin&readPreference=primary&appname=MongoDB%20Compass&ssl=false");
+                    var database = dbClient.GetDatabase("main_db");
+                    List<String> names = database.ListCollectionNames().ToList<String>();
+                    if (!names.Contains("Products"))
                     {
-                        dbConnection.CreateTable<Product>();
-                        products = dbConnection.Table<Product>().Skip(15 * entryCount).Take(15).ToList();
+                        database.CreateCollection("Products");
                     }
+                    var collection = database.GetCollection<Product>("Products");
+                    List<Product> products = collection.Find<Product>(new BsonDocument()).Skip(15*entryCount).Limit(15).ToList<Product>();
+
                     navigation_grid.Visibility = Visibility.Visible;
                     populateTable(products);
                 }
@@ -196,41 +209,18 @@ namespace TextileApp
             }
         }
 
-        private void Add_Item(Object Sender, RoutedEventArgs e)
-        {
-            addData();
-        }
-
-        public void addData()
-        {
-            Product product = new Product()
-            {
-                Barcode = "",
-                Name = "",
-                SellingPrice = "",
-                Cost = "",
-                MRP = "",
-                stock = 0,
-            };
-            AddProductWindow addProductWindow = new AddProductWindow(product);
-            addProductWindow.ShowDialog();
-
-            using (SQLiteConnection dbConnection = new SQLiteConnection(App.productDatabasePath))
-            {
-                dbConnection.CreateTable<Product>();
-                products = dbConnection.Table<Product>().ToList();
-            }
-            //populateTable(products);
-        }
-
         private void next_event(Object Sender, RoutedEventArgs e)
         {
             entryCount++;
-            using (SQLiteConnection dbConnection = new SQLiteConnection(App.productDatabasePath))
+            MongoClient dbClient = new MongoClient("mongodb://Thinkershut:Dev123@localhost:27017/?authSource=admin&readPreference=primary&appname=MongoDB%20Compass&ssl=false");
+            var database = dbClient.GetDatabase("main_db");
+            List<String> names = database.ListCollectionNames().ToList<String>();
+            if (!names.Contains("Products"))
             {
-                dbConnection.CreateTable<Product>();
-                products = dbConnection.Table<Product>().Skip(15*entryCount).Take(15).ToList();
+                database.CreateCollection("Products");
             }
+            var collection = database.GetCollection<Product>("Products");
+            List<Product> products = collection.Find<Product>(new BsonDocument()).Skip(15 * entryCount).Limit(15).ToList<Product>();
             if (products.Count > 0)
             {
                 populateTable(products);
@@ -246,11 +236,16 @@ namespace TextileApp
             entryCount--;
             if(entryCount >= 0)
             {
-                using (SQLiteConnection dbConnection = new SQLiteConnection(App.productDatabasePath))
+                MongoClient dbClient = new MongoClient("mongodb://Thinkershut:Dev123@localhost:27017/?authSource=admin&readPreference=primary&appname=MongoDB%20Compass&ssl=false");
+                var database = dbClient.GetDatabase("main_db");
+                List<String> names = database.ListCollectionNames().ToList<String>();
+                if (!names.Contains("Products"))
                 {
-                    dbConnection.CreateTable<Product>();
-                    products = dbConnection.Table<Product>().Skip(15 * entryCount).Take(15).ToList();
+                    database.CreateCollection("Products");
                 }
+                var collection = database.GetCollection<Product>("Products");
+                List<Product> products = collection.Find<Product>(new BsonDocument()).Skip(15 * entryCount).Limit(15).ToList<Product>();
+
                 populateTable(products);
             }
         }

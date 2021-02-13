@@ -1,5 +1,6 @@
 ﻿using HelloWPF;
 using HelloWPF.Classes;
+using MongoDB.Driver;
 using SQLite;
 using System;
 using System.Collections.Generic;
@@ -33,13 +34,16 @@ namespace TextileApp
         private void populateTableDashboard(String date)
         {
             List<Invoice> invoices = new List<Invoice>();
-            using (SQLiteConnection dbConnection = new SQLiteConnection(App.productDatabasePath))
+            MongoClient dbClient = new MongoClient("mongodb://Thinkershut:Dev123@localhost:27017/?authSource=admin&readPreference=primary&appname=MongoDB%20Compass&ssl=false");
+            var database = dbClient.GetDatabase("main_db");
+            List<String> names = database.ListCollectionNames().ToList<String>();
+            if (!names.Contains("Invoices"))
             {
-                dbConnection.CreateTable<Invoice>();
-                invoices = dbConnection.Table<Invoice>().ToList();
-                var sql_cmd = dbConnection.CreateCommand("SELECT * FROM 'Invoice' WHERE Date=='" + date + "'");
-                invoices = sql_cmd.ExecuteQuery<Invoice>();
+                database.CreateCollection("Invoices");
             }
+            var collection = database.GetCollection<Invoice>("Invoices");
+            var filter = Builders<Invoice>.Filter.Eq(i => i.Date, date);
+            invoices = collection.Find<Invoice>(filter).Limit(15).ToList<Invoice>();
 
             daily_sales_text.Text = invoices.Count.ToString();
             invoices = invoices.FindAll(invoice => invoice.Total != null);
@@ -52,40 +56,34 @@ namespace TextileApp
             List<Invoice> weeklyInvoices = new List<Invoice>();
             List<Invoice> monthlyInvoices = new List<Invoice>();
             DateTime day = DateTime.Now;
-            String weeklyQueryString = "";
-            String monthlyQueryString = "";
+            List<String> weekDates = new List<String>();
+            List<String> monthDates = new List<String>();
             do
             {
-                weeklyQueryString += "Date == '"+day.ToString("dd/M/yyyy")+"'";
-                if (!day.DayOfWeek.Equals(DayOfWeek.Monday))
-                {
-                    weeklyQueryString += " OR ";
-                }
+                weekDates.Add(day.ToString("dd/M/yyyy"));
                 day = day.AddDays(-1);
             } while (!day.AddDays(+1).DayOfWeek.Equals(DayOfWeek.Monday));
 
             day = DateTime.Now;
             do
             {
-                monthlyQueryString += "Date == '" + day.ToString("dd/M/yyyy") + "'";
-                if (day.Day != 1)
-                {
-                    monthlyQueryString += " OR ";
-                }
+                monthDates.Add(day.ToString("dd/M/yyyy"));
                 day = day.AddDays(-1);
             } while (day.AddDays(+1).Day != 1);
 
-            using (SQLiteConnection dbConnection = new SQLiteConnection(App.productDatabasePath))
+            MongoClient dbClient = new MongoClient("mongodb://Thinkershut:Dev123@localhost:27017/?authSource=admin&readPreference=primary&appname=MongoDB%20Compass&ssl=false");
+            var database = dbClient.GetDatabase("main_db");
+            List<String> names = database.ListCollectionNames().ToList<String>();
+            if (!names.Contains("Invoices"))
             {
-                dbConnection.CreateTable<Invoice>();
-                weeklyInvoices = dbConnection.Table<Invoice>().ToList();
-                var sql_cmd = dbConnection.CreateCommand("SELECT * FROM 'Invoice' WHERE "+ weeklyQueryString);
-                weeklyInvoices = sql_cmd.ExecuteQuery<Invoice>();
-
-                monthlyInvoices = dbConnection.Table<Invoice>().ToList();
-                sql_cmd = dbConnection.CreateCommand("SELECT * FROM 'Invoice' WHERE " + monthlyQueryString);
-                monthlyInvoices = sql_cmd.ExecuteQuery<Invoice>();
+                database.CreateCollection("Invoices");
             }
+            var collection = database.GetCollection<Invoice>("Invoices");
+            var filter = Builders<Invoice>.Filter.In("Date", weekDates);
+            weeklyInvoices = collection.Find<Invoice>(filter).ToList<Invoice>();
+
+            filter = Builders<Invoice>.Filter.In("Date", monthDates);
+            monthlyInvoices = collection.Find<Invoice>(filter).ToList<Invoice>();
 
             weekly_sales_text.Text = weeklyInvoices.Count.ToString();
             weeklyInvoices = weeklyInvoices.FindAll(invoice => invoice.Total != null);
