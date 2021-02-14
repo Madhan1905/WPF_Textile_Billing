@@ -35,11 +35,11 @@ namespace HelloWPF
             MongoClient dbClient = new MongoClient("mongodb://Thinkershut:Dev123@localhost:27017/?authSource=admin&readPreference=primary&appname=MongoDB%20Compass&ssl=false");
             var database = dbClient.GetDatabase("main_db");
             List<String> names = database.ListCollectionNames().ToList<String>();
-            if (!names.Contains("Invoices"))
+            if (!names.Contains("CurrentInvoices"))
             {
-                database.CreateCollection("Invoices");
+                database.CreateCollection("CurrentInvoices");
             }
-            var collection = database.GetCollection<Invoice>("Invoices");
+            var collection = database.GetCollection<Invoice>("CurrentInvoices");
             var filter = Builders<Invoice>.Filter.Eq(i => i.Date, date);
             invoices = collection.Find<Invoice>(filter).Limit(15).ToList<Invoice>();
 
@@ -90,11 +90,11 @@ namespace HelloWPF
                 MongoClient dbClient = new MongoClient("mongodb://Thinkershut:Dev123@localhost:27017/?authSource=admin&readPreference=primary&appname=MongoDB%20Compass&ssl=false");
                 var database = dbClient.GetDatabase("main_db");
                 List<String> names = database.ListCollectionNames().ToList<String>();
-                if (!names.Contains("Invoices"))
+                if (!names.Contains("CurrentInvoices"))
                 {
-                    database.CreateCollection("Invoices");
+                    database.CreateCollection("CurrentInvoices");
                 }
-                var collection = database.GetCollection<Invoice>("Invoices");
+                var collection = database.GetCollection<Invoice>("CurrentInvoices");
                 try
                 {
                     collection.DeleteOne(invoice.ToBsonDocument());

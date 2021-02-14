@@ -24,7 +24,7 @@ namespace HelloWPF
     /// </summary>
     public partial class App : Application
     {
-        public static string drive = "F://Thinkershut";
+        public static string drive = "D://Thinkershut";
         public static string productDatabasePath = drive + "//Products.db";
         public static string licensePath = drive+"//license.lic";
         public static Invoice currentInvoice = null;
@@ -73,7 +73,7 @@ namespace HelloWPF
 
                     return (licenseMac.Equals(macAddr) && DateTime.Now <= licenseDate);
                 }
-                catch
+                catch (Exception e)
                 {
                     return false;
                 }

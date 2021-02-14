@@ -71,11 +71,11 @@
                             <TableCell BorderBrush="Black" BorderThickness="0,0,1,0" Padding="2">
                                 <Paragraph FontSize="14pt" FontWeight="Bold" TextAlignment="Center">Print Name</Paragraph>
                             </TableCell>
-                            <TableCell BorderBrush="Black" BorderThickness="0,0,1,0" Padding="2">
+                            <!--<TableCell BorderBrush="Black" BorderThickness="0,0,1,0" Padding="2">
                                 <Paragraph FontSize="14pt" FontWeight="Bold" TextAlignment="Center">Cost Price</Paragraph>
-                            </TableCell>
+                            </TableCell>-->
                             <TableCell BorderBrush="Black" BorderThickness="0,0,1,0" Padding="2">
-                                <Paragraph FontSize="14pt" FontWeight="Bold" TextAlignment="Center">MRP</Paragraph>
+                                <Paragraph FontSize="14pt" FontWeight="Bold" TextAlignment="Center">Rate</Paragraph>
                             </TableCell>
                             <TableCell Padding="2">
                                 <Paragraph FontSize="14pt" FontWeight="Bold" TextAlignment="Center">Stock</Paragraph>

@@ -1,6 +1,8 @@
 ﻿using HelloWPF.Classes;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Windows;
@@ -18,16 +20,16 @@ namespace HelloWPF
         {
             InitializeComponent();
 
-            if (true)
+            if (App.validateLicenseFile(App.licensePath))
             {
-                //DateTime expirationDate = DateTime.ParseExact(App.expirationDate, "dd/M/yyyy HH:mm:ss",
-                //                            System.Globalization.CultureInfo.InvariantCulture);
-                //double daysLeft = Math.Ceiling((expirationDate - DateTime.Now).TotalDays);
-                //if (daysLeft == 10 || daysLeft == 5 || daysLeft == 3 || daysLeft == 1)
-                //{
-                //    MessageBox.Show("Your license file expires in " + daysLeft + " day(s).\nPlease Contact admin @8870395228 or support@thinkers-hut.com", "Reminder",
-                //                                            MessageBoxButton.OK, MessageBoxImage.Warning);
-                //}
+                DateTime expirationDate = DateTime.ParseExact(App.expirationDate, "dd/M/yyyy HH:mm:ss",
+                                            System.Globalization.CultureInfo.InvariantCulture);
+                double daysLeft = Math.Ceiling((expirationDate - DateTime.Now).TotalDays);
+                if (daysLeft == 10 || daysLeft == 5 || daysLeft == 3 || daysLeft == 1)
+                {
+                    MessageBox.Show("Your license file expires in " + daysLeft + " day(s).\nPlease Contact admin @8870395228 or support@thinkers-hut.com", "Reminder",
+                                                            MessageBoxButton.OK, MessageBoxImage.Warning);
+                }
                 this.WindowState = WindowState.Maximized;
                 footer_grid.Visibility = Visibility.Visible;
                 MainWindowControl.Content = new HomeControl(MainWindowControl);
@@ -125,12 +127,42 @@ namespace HelloWPF
 
         public void closePrompt(CancelEventArgs e)
         {
-            MessageBoxResult result = MessageBox.Show("Do you want to Exit?", "Confirmation",
+            MessageBoxResult result = MessageBox.Show("Do you want to Save Today's Bills?", "Confirmation",
                                                                             MessageBoxButton.YesNo, MessageBoxImage.Question);
             if (result == MessageBoxResult.Yes)
             {
                 if(e == null)
                 {
+                    MongoClient dbClient = new MongoClient("mongodb://Thinkershut:Dev123@localhost:27017/?authSource=admin&readPreference=primary&appname=MongoDB%20Compass&ssl=false");
+                    var database = dbClient.GetDatabase("main_db");
+                    List<String> names = database.ListCollectionNames().ToList<String>();
+                    if (!names.Contains("CurrentInvoices"))
+                    {
+                        database.CreateCollection("CurrentInvoices");
+                    }
+                    var collection = database.GetCollection<Invoice>("CurrentInvoices");
+                    if (!names.Contains("AllInvoices"))
+                    {
+                        database.CreateCollection("AllInvoices");
+                    }
+                    var allCollection = database.GetCollection<MainInvoice>("AllInvoices");
+                    List<Invoice> invoices = collection.Find<Invoice>(new BsonDocument()).ToList<Invoice>();
+                    List<MainInvoice> mainInvoices = new List<MainInvoice>();
+                    foreach(Invoice invoice in invoices){
+                        MainInvoice mainInvoice = new MainInvoice();
+                        mainInvoice.Number = invoice.Number;
+                        mainInvoice.Date = invoice.Date;
+                        mainInvoice.Time = invoice.Time;
+                        mainInvoice.Total = invoice.Total;
+                        mainInvoice.Discount = invoice.Discount;
+                        mainInvoice.BillingProducts = invoice.BillingProducts;
+
+                        mainInvoices.Add(mainInvoice);
+                    }
+                    allCollection.InsertMany(mainInvoices);
+
+                    var filter = Builders<Invoice>.Filter.Ne(i => i.Time, null);
+                    collection.DeleteMany(filter);
                     Closing -= MainWindow_Closing;
                     Close();
                 }

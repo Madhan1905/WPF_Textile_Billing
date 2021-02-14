@@ -37,6 +37,13 @@ namespace TextileApp
             MainWindow = window;
             MainWindowControl = control;
             footer_grid = grid;
+
+            string macAddr = (
+                        from nic in NetworkInterface.GetAllNetworkInterfaces()
+                        where nic.OperationalStatus == OperationalStatus.Up
+                        select nic.GetPhysicalAddress().ToString()
+                    ).FirstOrDefault();
+            ErrorLabel.Content = "Your license file is invalid or expired for the mac-id:" + macAddr + ".";
         }
 
         private void uploadEvent(Object sender, RoutedEventArgs e)

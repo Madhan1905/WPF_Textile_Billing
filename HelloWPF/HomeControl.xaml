@@ -54,6 +54,6 @@
                 Quit
             </Button>
         </Grid>
-        <Image Grid.Column="2" Source="/Images/home_wallpaper.jpg"/>
+        
     </Grid>
 </UserControl>

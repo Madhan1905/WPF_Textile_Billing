@@ -64,7 +64,7 @@ namespace TextileApp
                 creatTableCell(product.Barcode, newRow, true, true);
                 creatTableCell(product.Name, newRow, true, false);
                 creatTableCell(product.PrintName, newRow, true, true);
-                creatTableCell(product.Cost, newRow, true, true);
+                //creatTableCell(product.Cost, newRow, true, true);
                 creatTableCell(product.MRP, newRow, true, true);
                 creatTableCell(product.stock.ToString(), newRow, false, true);
                 rowIndex++;

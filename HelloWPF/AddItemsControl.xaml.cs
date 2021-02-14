@@ -31,7 +31,7 @@ namespace TextileApp
             barcode.Text = product.Barcode;
             name.Text = product.Name;
             printName.Text = product.PrintName;
-            cost.Text = product.Cost;
+            //cost.Text = product.Cost;
             mrp.Text = product.MRP;
             stock.Text = product.stock.ToString();
             if (!product.Barcode.Equals(""))
@@ -59,10 +59,10 @@ namespace TextileApp
             {
                 printName.SelectAll();
             }
-            if (cost.IsFocused)
-            {
-                cost.SelectAll();
-            }
+            //if (cost.IsFocused)
+            //{
+            //    cost.SelectAll();
+            //}
             if (mrp.IsFocused)
             {
                 mrp.SelectAll();
@@ -86,7 +86,7 @@ namespace TextileApp
         private void submitData()
         {
             if (barcode.Text.Trim().Equals("") || name.Text.Trim().Equals("") ||
-                printName.Text.Trim().Equals("") || cost.Text.Trim().Equals("") || mrp.Text.Trim().Equals(""))
+                printName.Text.Trim().Equals("") /*|| cost.Text.Trim().Equals("")*/ || mrp.Text.Trim().Equals(""))
             {
                 error_text.Visibility = Visibility.Visible;
             }
@@ -101,7 +101,7 @@ namespace TextileApp
                     Barcode = barcode.Text,
                     Name = name.Text,
                     PrintName = printName.Text,
-                    Cost = cost.Text,
+                    //Cost = cost.Text,
                     MRP = mrp.Text,
                     stock = long.Parse(stock.Text)
                 };
@@ -139,7 +139,7 @@ namespace TextileApp
                     barcode.Text = "";
                     name.Text = "";
                     printName.Text = "";
-                    cost.Text = "";
+                    //cost.Text = "";
                     mrp.Text = "";
                     stock.Text = "";
                 }
