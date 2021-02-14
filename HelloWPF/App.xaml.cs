@@ -87,7 +87,7 @@ namespace HelloWPF
 
         private void Application_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
         {
-            MessageBox.Show("Soething Went Wrong" + e.Exception.Message, "Application Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+            MessageBox.Show("Something Went Wrong" + e.Exception.Message, "Application Error", MessageBoxButton.OK, MessageBoxImage.Warning);
             e.Handled = true;
         }
 
